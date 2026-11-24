@@ -4,7 +4,7 @@ import ClaimForm from '@/components/ClaimForm';
 
 const u = (id: string, w: number) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=75`;
 const IMG = {
-  hero: 'photo-1531190260877-c8d11eb5afaf', // leather wallet on a table, dark background
+  hero: 'photo-1620109176813-e91290f6c795', // closed leather wallet on dark leather, no branding
   desk: 'photo-1559163499-413811fb2344',    // desk with notebook, pen, coffee
 };
 
@@ -20,7 +20,7 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-[#0c1f1b]">
-        <Image src={u(IMG.hero, 2200)} alt="A leather wallet on a table" fill priority sizes="100vw" className="-z-10 object-cover object-right" />
+        <Image src={u(IMG.hero, 2200)} alt="A leather wallet" fill priority sizes="100vw" className="-z-10 object-cover object-right" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0c1f1b]/85 via-[#0c1f1b]/45 to-transparent" />
         <div className="mx-auto max-w-[1170px] px-[15px] py-[45px] sm:py-[110px]">
           <div className={`${eyebrow} text-white`}>Recover overpaid city fines</div>
