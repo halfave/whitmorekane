@@ -1,59 +1,63 @@
 import './globals.css';
 import Link from 'next/link';
-import { Archivo, Source_Serif_4 } from 'next/font/google';
+import { Work_Sans } from 'next/font/google';
 import { FIRM } from '@/lib/agreement';
 
-const display = Archivo({ subsets: ['latin'], variable: '--font-display', weight: ['400', '600', '700'] });
-const serif = Source_Serif_4({ subsets: ['latin'], variable: '--font-serif' });
+const work = Work_Sans({ subsets: ['latin'], variable: '--font-display', weight: ['400', '500', '600', '700'] });
 
 export const metadata = {
   title: `${FIRM} | Property owner refund recovery`,
   description: 'We find overpaid fines and penalties held by New York City agencies and help property owners get them back.',
 };
 
-const NAV = [
-  ['Got a letter?', '/#claim'],
-  ['How it works', '/#how'],
-  ['Is this real?', '/#real'],
-  ['FAQ', '/#faq'],
+const NAV: [string, string][] = [
+  ['Got a letter?', '/got-a-letter'],
+  ['How it works', '/how-it-works'],
   ['Claim status', '/status'],
+  ['FAQ', '/#faq'],
   ['Contact', '/#contact'],
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${serif.variable}`}>
-      <body className="min-h-screen bg-white font-[family-name:var(--font-display)] text-[#1b2420] antialiased">
-        <header className="sticky top-0 z-20 bg-[#13302a] text-white">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <html lang="en" className={work.variable}>
+      <body className="min-h-screen bg-white font-[family-name:var(--font-display)] text-[14px] leading-[1.45] text-[#333] antialiased">
+        <header className="sticky top-0 z-30 bg-gradient-to-r from-[#0c1f1b] to-[#14332c] text-white">
+          <div className="mx-auto flex h-[74px] max-w-[1170px] items-center justify-between gap-4 px-[15px]">
             <Link href="/" className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-sm bg-[#c8875a] font-[family-name:var(--font-serif)] text-base font-semibold text-[#13302a]">WK</span>
-              <span className="text-lg font-semibold tracking-tight">Whitmore Kane <span className="font-normal text-white/70">&amp; Associates</span></span>
+              <span className="grid h-[34px] w-[34px] place-items-center rounded-[4px] bg-[#f4ead8] text-[15px] font-bold tracking-tight text-[#a8703f]">WK</span>
+              <span className="text-[17px] font-semibold">Whitmore Kane &amp; Assoc.</span>
             </Link>
-            <nav className="hidden gap-6 text-sm text-white/85 md:flex">
-              {NAV.map(([l, h]) => <Link key={h} href={h} className="hover:text-white">{l}</Link>)}
+            <nav className="hidden items-center gap-7 text-[13px] font-medium md:flex">
+              {NAV.map(([l, h]) => <Link key={h} href={h} className="text-white/90 hover:text-[#e0b083]">{l}</Link>)}
             </nav>
-            <Link href="/#claim" className="rounded-full bg-[#c8875a] px-4 py-2 text-sm font-semibold text-[#13302a] md:hidden">Got a letter?</Link>
+            <Link href="/got-a-letter" className="rounded-full bg-gradient-to-b from-[#c9935f] to-[#a8703f] px-4 py-2 text-[13px] font-semibold text-white md:hidden">Got a letter?</Link>
           </div>
-          <div className="h-[3px] bg-gradient-to-r from-[#c8875a] via-[#e2b48c] to-[#c8875a]" />
+          <div className="h-[2px] bg-gradient-to-r from-[#a8703f] via-[#e0b083] to-[#a8703f]" />
         </header>
+
         <main>{children}</main>
-        <footer className="mt-16 bg-[#0e231f] text-sm text-white/70">
-          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
+
+        <footer className="border-t border-[#e6e0d5] bg-[#f4efe6]">
+          <div className="mx-auto grid max-w-[1170px] gap-8 px-[15px] py-10 text-[13px] sm:grid-cols-[1.2fr_1fr_1fr]">
             <div>
-              <div className="font-semibold text-white">{FIRM}</div>
-              <p className="mt-2 leading-relaxed">Refund recovery for New York property owners.</p>
+              <div className="text-[15px] font-semibold text-[#13302a]">{FIRM}</div>
+              <p className="mt-2 max-w-xs text-[#4a5550]">Refund recovery for New York property owners. We find credits on public agency records and handle the paperwork.</p>
             </div>
-            <div className="grid gap-1">
-              {NAV.map(([l, h]) => <Link key={h} href={h} className="hover:text-white">{l}</Link>)}
+            <div className="grid content-start gap-1.5">
+              {NAV.map(([l, h]) => <Link key={h} href={h} className="text-[#4a5550] hover:text-[#13302a]">{l}</Link>)}
             </div>
-            <div className="leading-relaxed">
-              <a href="mailto:claims@whitmorekane.com" className="hover:text-white">claims@whitmorekane.com</a>
-              <p className="mt-3 text-xs">
-                Whitmore Kane &amp; Associates is a trade name of Half Ave Company LLC. We are not a law firm and do not give
-                legal advice. You can recover funds owed to you directly from the holding agency at no cost.
-              </p>
+            <div className="text-[#4a5550]">
+              <div className="font-semibold text-[#13302a]">Questions?</div>
+              <a href="mailto:claims@whitmorekane.com" className="mt-1 block hover:text-[#13302a]">claims@whitmorekane.com</a>
+              <p className="mt-1">Include your claim code.</p>
             </div>
+          </div>
+          <div className="border-t border-[#e6e0d5]">
+            <p className="mx-auto max-w-[1170px] px-[15px] py-4 text-[11px] leading-relaxed text-[#6b756f]">
+              © {new Date().getFullYear()} Whitmore Kane &amp; Associates, a trade name of Half Ave Company LLC. We are not a law
+              firm and do not give legal advice. You can recover funds owed to you directly from the holding agency at no cost.
+            </p>
           </div>
         </footer>
       </body>

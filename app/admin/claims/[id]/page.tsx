@@ -94,7 +94,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
 
       <div className={card}>
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h1 className="font-serif text-2xl">{c.violation_number || c.summons_numbers?.join(', ')}</h1>
+          <h1 className="text-2xl font-medium uppercase text-[#13302a]">{c.violation_number || c.summons_numbers?.join(', ')}</h1>
           <div className="font-mono text-sm">Code {c.claim_code}{c.respondent_zip ? ` · ZIP ${c.respondent_zip}` : ''}</div>
         </div>
         <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
@@ -106,7 +106,21 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
           <div><dt className="inline text-[#6b7480]">Credit owed: </dt><dd className="inline font-semibold">{usd(c.amount)}</dd></div>
           <div><dt className="inline text-[#6b7480]">Fee: </dt><dd className="inline">{Number(c.fee_pct)}%</dd></div>
           <div><dt className="inline text-[#6b7480]">Filed: </dt><dd className="inline">{c.filed_at ? new Date(c.filed_at).toLocaleDateString() : '—'}</dd></div>
+          <div><dt className="inline text-[#6b7480]">Refund request signed: </dt><dd className="inline">{c.refund_request_signed_at ? `${new Date(c.refund_request_signed_at).toLocaleString()} by ${c.refund_request_signer || '—'} (IP ${c.refund_request_ip || '—'})` : '—'}</dd></div>
         </dl>
+        {info && (
+          <div className="mt-4 flex flex-wrap gap-3 text-sm">
+            <a href={`/api/admin/claims/${c.id}/ppu1`} target="_blank" rel="noreferrer" className="rounded border border-[#13302a] px-3 py-1.5">
+              {c.refund_request_signed_at ? 'Download signed PPU1' : 'Preview PPU1 (unsigned)'}
+            </a>
+            {c.refund_request_signed_at && (
+              <a className="rounded border border-[#13302a] px-3 py-1.5"
+                href={`mailto:penaltyprocessing@oath.nyc.gov?cc=ClerksOffice@oath.nyc.gov&subject=${encodeURIComponent(`Refund Request – ${c.respondent_name} – Summons ${c.violation_number}`)}&body=${encodeURIComponent(`Dear Penalty Processing Unit,\n\nOn behalf of respondent ${c.respondent_name}, attached is a signed refund request (PPU1) for summons ${c.violation_number}, with proof of payment and the signer's ID.\n\nPenalty imposed: ${usd(c.penalty_imposed)}\nAmount paid: ${usd(c.amount_paid)}\nCredit requested: ${usd(c.amount)}\n\nThank you,\nWhitmore Kane & Associates\nclaims@whitmorekane.com`)}`}>
+                Draft email to OATH
+              </a>
+            )}
+          </div>
+        )}
         <form action={updateClaim} className="mt-4 grid gap-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
           <input type="hidden" name="id" value={c.id} />
           <label className="text-xs">Status
@@ -118,7 +132,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
       </div>
 
       <div className={card}>
-        <h2 className="font-serif text-lg">Money</h2>
+        <h2 className="text-lg font-medium uppercase text-[#13302a]">Money</h2>
         <div className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
           <div><div className="text-xs text-[#6b7480]">Refunded</div>{usd(l?.refunded)}</div>
           <div><div className="text-xs text-[#6b7480]">Offset by agency</div>{usd(l?.offset)}</div>
@@ -157,7 +171,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
       </div>
 
       <div className={card}>
-        <h2 className="font-serif text-lg">Authorization</h2>
+        <h2 className="text-lg font-medium uppercase text-[#13302a]">Authorization</h2>
         {auths?.length ? auths.map((a: any) => (
           <p key={a.id} className="mt-2 text-sm">
             Signed by <b>{a.signer_name}</b>{a.signer_title ? `, ${a.signer_title}` : ''} ({a.signer_email}) on {new Date(a.signed_at).toLocaleString()} · IP {a.ip || '—'} · agreement v{a.agreement_version} · <span className="font-mono text-xs">{a.agreement_sha256.slice(0, 12)}</span>
@@ -166,13 +180,18 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
       </div>
 
       <div className={card}>
-        <h2 className="font-serif text-lg">Claimant info</h2>
+        <h2 className="text-lg font-medium uppercase text-[#13302a]">Claimant info</h2>
         {info ? (
           <dl className="mt-2 grid gap-1 text-sm">
             <div><dt className="inline text-[#6b7480]">Entity: </dt><dd className="inline">{info.entity_name}</dd></div>
             <div><dt className="inline text-[#6b7480]">Contact: </dt><dd className="inline">{info.contact_name}{info.contact_title ? `, ${info.contact_title}` : ''} · {info.email} · {info.phone || '—'}</dd></div>
             <div><dt className="inline text-[#6b7480]">Check mailing address: </dt><dd className="inline">{info.mailing_address}</dd></div>
             <div><dt className="inline text-[#6b7480]">Paid by owner: </dt><dd className="inline">{info.paid_by_respondent === false ? `No — ${info.payer_name || 'unknown payer'}` : info.paid_by_respondent ? 'Yes' : 'Not sure'}</dd></div>
+            <div><dt className="inline text-[#6b7480]">Refund reason: </dt><dd className="inline">{info.refund_reason}{info.reason_explain ? ` — ${info.reason_explain}` : ''}</dd></div>
+            <div><dt className="inline text-[#6b7480]">Payment confirmation: </dt><dd className="inline">
+              {info.pay_unknown ? <b className="text-amber-800">Owner can’t find it — request payment record from agency</b>
+                : [info.pay_receipt_number, info.pay_date, info.pay_amount != null ? usd(info.pay_amount) : null, info.pay_method, info.pay_last4 ? `…${info.pay_last4}` : null].filter(Boolean).join(' · ') || '—'}
+            </dd></div>
             {info.notes && <div><dt className="inline text-[#6b7480]">Notes: </dt><dd className="inline">{info.notes}</dd></div>}
           </dl>
         ) : <p className="mt-2 text-sm text-[#6b7480]">Not submitted yet.</p>}

@@ -60,7 +60,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
   return (
     <div className="grid gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-serif text-2xl">Claims</h1>
+        <h1 className="text-2xl font-medium uppercase text-[#13302a]">Claims</h1>
         <form action={logout}><button className="text-sm underline">Sign out</button></form>
       </div>
 
@@ -99,7 +99,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
       </div>
 
       <form action={createClaim} className="rounded-lg border border-[#e3e0d8] bg-white p-5">
-        <h2 className="font-serif text-lg">New claim (one per violation)</h2>
+        <h2 className="text-lg font-medium uppercase text-[#13302a]">New claim (one per violation)</h2>
         {e && <p className="mt-2 text-sm text-red-700">{e}</p>}
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <label className="text-xs">Violation number*<input name="violation_number" required className={inp} /></label>

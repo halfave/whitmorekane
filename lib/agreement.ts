@@ -1,6 +1,6 @@
 export const FIRM = 'Whitmore Kane & Associates';
 export const FIRM_LEGAL = 'Half Ave Company LLC, d/b/a Whitmore Kane & Associates';
-export const AGREEMENT_VERSION = '2026-11-24';
+export const AGREEMENT_VERSION = '2026-11-24b';
 
 export function agreementText(p: { respondent: string; amount: number; feePct: number }) {
   const amt = p.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -12,7 +12,7 @@ Estimated amount: ${amt}
 
 1. You may recover these funds yourself. You do not need ${FIRM} or any other firm to claim money owed to you. You can contact the holding agency directly and pay no fee.
 
-2. Authorization. The Owner authorizes the Firm to identify the funds, prepare and submit the refund request and supporting documents to the holding agency, and communicate with that agency on the Owner's behalf.
+2. Authorization. The Owner authorizes the Firm to identify the funds, prepare the refund request for the Owner's signature, submit it with supporting documents to the holding agency, and communicate with that agency on the Owner's behalf about this refund only.
 
 3. Disclosure after signing. On signing, the Firm will disclose the holding agency, the record numbers and the property involved.
 
@@ -24,7 +24,7 @@ Estimated amount: ${amt}
 
 7. Accuracy. The Owner confirms that the information and documents it provides are true and that the signer is authorized to act for the Owner.
 
-8. Electronic signature. The Owner agrees that typing a name below is a legal signature.`;
+8. Electronic signature. The Owner agrees to sign electronically. The signature drawn below is the Owner's legal signature on this agreement and, once the Owner reviews and approves it, on the agency refund request.`;
 }
 
 export async function sha256(text: string) {

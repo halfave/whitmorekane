@@ -4,13 +4,12 @@ export const metadata = { title: 'Claim status | Whitmore Kane & Associates' };
 
 export default function Status() {
   return (
-    <section className="mx-auto max-w-3xl px-4 py-16">
-      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c8875a]">Claim status</div>
-      <h1 className="mt-2 text-3xl font-bold uppercase tracking-tight">Check on your claim</h1>
-      <p className="mt-3 font-[family-name:var(--font-serif)] text-lg text-[#3d4843]">
-        Enter the claim code and ZIP code from your letter to see where things stand.
-      </p>
-      <div className="mt-8"><ClaimForm /></div>
+    <section className="bg-[#f4efe6]">
+      <div className="mx-auto max-w-[900px] px-[15px] py-[60px] text-center">
+        <h1 className="text-[34px] font-medium text-[#13302a] sm:text-[40px]">Claim status</h1>
+        <p className="mx-auto mt-3 max-w-[520px] text-[#4a5550]">Enter the claim code and ZIP code from your letter to see where your claim stands.</p>
+        <div className="mx-auto mt-8 max-w-[720px] bg-white p-4 shadow-sm"><ClaimForm inline /></div>
+      </div>
     </section>
   );
 }

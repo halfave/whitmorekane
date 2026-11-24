@@ -14,7 +14,7 @@ export async function loadClaim(code: string, zip?: string | null) {
   const { data, error } = await admin
     .from('claims')
     .select('*')
-    .eq('claim_code', code.trim().toUpperCase())
+    .eq('claim_code', String(code || '').trim().toUpperCase())
     .maybeSingle();
   if (error || !data) return null;
   if (data.respondent_zip && (!zip || zip.trim() !== data.respondent_zip)) return null;
@@ -25,8 +25,18 @@ const SIGNED = ['signed', 'info_submitted', 'filed', 'paid', 'closed'];
 export const isSigned = (status: string) => SIGNED.includes(status);
 
 // What the owner sees. Identifying details stay hidden until they sign.
-export function publicView(c: any) {
+export async function publicView(c: any) {
   const signed = isSigned(c.status);
+  let hasInfo = false;
+  let docs: string[] = [];
+  if (signed) {
+    const [{ count }, { data: d }] = await Promise.all([
+      admin.from('claimant_info').select('claim_id', { count: 'exact', head: true }).eq('claim_id', c.id),
+      admin.from('documents').select('kind').eq('claim_id', c.id),
+    ]);
+    hasInfo = (count || 0) > 0;
+    docs = Array.from(new Set((d || []).map((x: any) => x.kind)));
+  }
   return {
     code: c.claim_code,
     respondent: c.respondent_name,
@@ -35,8 +45,17 @@ export function publicView(c: any) {
     feePct: Number(c.fee_pct),
     status: c.status,
     signed,
+    hasInfo,
+    docs,
+    refundRequestSigned: !!c.refund_request_signed_at,
+    filedAt: c.filed_at,
     details: signed
-      ? { summons: c.violation_number ? [c.violation_number] : c.summons_numbers, property: c.property_address }
+      ? {
+          summons: c.violation_number ? [c.violation_number] : c.summons_numbers,
+          property: c.property_address,
+          penalty: c.penalty_imposed != null ? Number(c.penalty_imposed) : null,
+          paid: c.amount_paid != null ? Number(c.amount_paid) : null,
+        }
       : null,
   };
 }

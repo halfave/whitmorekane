@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function ClaimForm({ dark = false }: { dark?: boolean }) {
+export default function ClaimForm({ inline = false, dark = false }: { inline?: boolean; dark?: boolean }) {
   const router = useRouter();
   const [code, setCode] = useState('');
   const [zip, setZip] = useState('');
@@ -20,15 +20,14 @@ export default function ClaimForm({ dark = false }: { dark?: boolean }) {
     router.push(`/claim/${c}`);
   }
 
-  const field = 'w-full rounded-sm border-0 bg-white px-4 py-3 text-[#1b2420] placeholder:text-[#7b857f] outline-none ring-1 ring-black/10 focus:ring-2 focus:ring-[#c8875a]';
+  const field = 'h-[42px] w-full rounded-[2px] border border-[#ccc] bg-white px-[15px] text-[14px] text-[#13302a] placeholder:text-[#999] outline-none focus:border-[#a8703f]';
+  const button = 'h-[42px] rounded-full bg-gradient-to-b from-[#c9935f] to-[#a8703f] px-10 text-[14px] font-medium text-white shadow-sm disabled:opacity-60';
   return (
-    <form onSubmit={go} className="grid max-w-md gap-3">
-      <input value={code} onChange={(e) => setCode(e.target.value)} required placeholder="Claim code from your letter" className={`${field} uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal`} />
-      <input value={zip} onChange={(e) => setZip(e.target.value)} inputMode="numeric" placeholder="ZIP code on your letter" className={field} />
-      <button disabled={busy} className="mt-1 w-56 rounded-full bg-gradient-to-b from-[#d79a6e] to-[#b8764a] px-6 py-3 font-semibold text-[#13302a] shadow disabled:opacity-60">
-        {busy ? 'Checking…' : 'Find my claim'}
-      </button>
-      {err && <p className={`text-sm ${dark ? 'text-[#ffd6c2]' : 'text-red-700'}`}>{err}</p>}
+    <form onSubmit={go} className={inline ? 'grid gap-2.5 sm:grid-cols-[1fr_1fr_auto]' : 'grid max-w-[355px] gap-2.5'}>
+      <input value={code} onChange={(e) => setCode(e.target.value)} required placeholder="Please enter claim code" aria-label="Claim code" className={`${field} uppercase placeholder:normal-case`} />
+      <input value={zip} onChange={(e) => setZip(e.target.value)} inputMode="numeric" placeholder="Please enter ZIP code" aria-label="ZIP code" className={field} />
+      <button disabled={busy} className={`${button} ${inline ? '' : 'mt-3 w-fit'}`}>{busy ? 'Checking…' : 'Find Out More'}</button>
+      {err && <p className={`text-[13px] sm:col-span-3 ${dark ? 'text-[#ffd8c2]' : 'text-red-700'}`}>{err}</p>}
     </form>
   );
 }
