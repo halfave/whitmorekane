@@ -2,14 +2,15 @@ import './globals.css';
 import Link from 'next/link';
 import { Work_Sans, Cormorant_Garamond } from 'next/font/google';
 import Logo from '@/components/Logo';
+import PrivacyBanner, { PrivacyPreferencesLink } from '@/components/PrivacyBanner';
 import { FIRM } from '@/lib/agreement';
 
 const work = Work_Sans({ subsets: ['latin'], variable: '--font-display', weight: ['400', '500', '600', '700'] });
 const serif = Cormorant_Garamond({ subsets: ['latin'], variable: '--font-serif', weight: ['600', '700'], style: ['normal', 'italic'] });
 
 export const metadata = {
-  title: `${FIRM} | Property owner refund recovery`,
-  description: 'New York City agencies hold money that belongs to property owners. We find it and get it back to you.',
+  title: `${FIRM} | Recover money owed to you`,
+  description: 'New York City agencies hold money that belongs to people and businesses. We find it and get it back to you.',
 };
 
 const NAV: [string, string][] = [
@@ -41,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="mx-auto grid max-w-[1170px] gap-8 px-[15px] py-10 text-[13px] sm:grid-cols-[1.2fr_1fr_1fr]">
             <div>
               <Logo dark={false} />
-              <p className="mt-2 max-w-xs text-[#4a5550]">Recovering money New York City agencies hold for property owners. You don’t pay unless we recover your funds.</p>
+              <p className="mt-2 max-w-xs text-[#4a5550]">Recovering money New York City agencies hold for you. You don’t pay unless we recover your funds.</p>
             </div>
             <div className="grid content-start gap-1.5">
               {NAV.map(([l, h]) => <Link key={h} href={h} className="text-[#4a5550] hover:text-[#13302a]">{l}</Link>)}
@@ -53,12 +54,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
           <div className="border-t border-[#e6e0d5]">
-            <p className="mx-auto max-w-[1170px] px-[15px] py-4 text-[11px] leading-relaxed text-[#6b756f]">
-              © {new Date().getFullYear()} Whitmore Kane &amp; Associates, a trade name of Half Ave Company LLC. We are not a law
-              firm and do not give legal advice. You can recover funds owed to you directly from the holding agency at no cost.
-            </p>
+            <div className="mx-auto flex max-w-[1170px] flex-col gap-2 px-[15px] py-4 text-[12px] text-[#6b756f] sm:flex-row sm:items-center sm:justify-between">
+              <p>Copyright {new Date().getFullYear()} Whitmore Kane &amp; Associates. All rights reserved.</p>
+              <nav className="flex flex-wrap gap-x-4 gap-y-1">
+                <Link href="/privacy" className="hover:text-[#13302a]">Privacy Policy</Link>
+                <PrivacyPreferencesLink />
+                <Link href="/terms" className="hover:text-[#13302a]">Terms &amp; Conditions</Link>
+                <Link href="/accessibility" className="hover:text-[#13302a]">Accessibility</Link>
+                <Link href="/sitemap" className="hover:text-[#13302a]">Site Map</Link>
+              </nav>
+            </div>
           </div>
         </footer>
+        <PrivacyBanner />
       </body>
     </html>
   );

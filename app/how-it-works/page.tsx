@@ -66,9 +66,9 @@ export default function HowItWorks() {
       </section>
 
       <section className="mx-auto max-w-[1170px] px-[15px] py-[60px]">
-        <h2 className="text-[24px] font-medium uppercase text-[#13302a]">Why owners use us</h2>
+        <h2 className="text-[24px] font-medium uppercase text-[#13302a]">Why people use us</h2>
         <p className="mt-2 max-w-[700px] text-[#4a5550]">
-          You can contact the agency yourself. Most owners who try run into at least one of these, and we’ve handled all of them before.
+          You can contact the agency yourself. Most people who try run into at least one of these, and we’ve handled all of them before.
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {WHY.map(([t, d]) => (

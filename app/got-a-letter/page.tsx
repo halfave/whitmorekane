@@ -24,7 +24,7 @@ export default function GotALetter() {
         </div>
         <div className="text-[15px] text-[#4a5550]">
           <h2 className="text-[26px] font-medium uppercase leading-[1.1] text-[#13302a]">Where does the money come from?</h2>
-          <p className="mt-4">City agencies hold money that belongs to property owners, and they rarely reach out to return it. We find it and handle the process of getting it back.</p>
+          <p className="mt-4">City agencies hold money that belongs to people and businesses, and they rarely reach out to return it. We find it and handle the process of getting it back.</p>
           <p className="mt-3">Once you sign, we show you exactly which agency holds your money and the record it’s tied to, so you can confirm it yourself.</p>
           <Link href="/how-it-works" className="mt-5 inline-block font-medium text-[#a8703f] underline">See how the process works</Link>
         </div>

@@ -23,7 +23,7 @@ export default function Home() {
         <Image src={u(IMG.hero, 2200)} alt="A wallet stuffed with cash" fill priority sizes="100vw" className="-z-10 object-cover object-[70%_60%]" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0c1f1b]/95 via-[#0c1f1b]/70 to-[#0c1f1b]/10" />
         <div className="mx-auto max-w-[1170px] px-[15px] py-[45px] sm:py-[110px]">
-          <div className={`${eyebrow} text-white`}>Money owed to New York property owners</div>
+          <div className={`${eyebrow} text-white`}>Money owed to you by New York City</div>
           <h1 className="mb-[37px] mt-5 max-w-[620px] text-[34px] font-medium uppercase leading-[1.1] text-white sm:text-[52px]">
             We found your money. Claim it.
           </h1>
@@ -38,15 +38,14 @@ export default function Home() {
         </div>
         <div>
           <div className={`${eyebrow} text-[#13302a]`}>About Whitmore Kane &amp; Associates</div>
-          <h2 className={h2}>Recovery specialists working for property owners</h2>
+          <h2 className={h2}>Recovery specialists working for you</h2>
           <p className="mt-4 text-[#4a5550]">
-            New York City agencies hold money that belongs to property owners, and most owners never find out about it.
+            New York City agencies hold money that belongs to people and businesses, and most never find out about it.
             We find it, tell you about it, and handle everything needed to get it back to you.
           </p>
           <p className="mt-3 text-[#4a5550]">
             Getting money back from a city agency takes the right forms, the right proof and patience when something goes wrong.
-            We manage residential buildings in New York ourselves and have been through it, so we know how to handle the issues
-            owners run into.
+            We’ve been through it many times, so we know how to handle the issues people run into.
           </p>
           <Link href="/how-it-works" className={`${btn} mt-6`}>How it works</Link>
         </div>
@@ -57,7 +56,7 @@ export default function Home() {
         <section className="bg-[#f4efe6] py-[30px]">
           <div className="mx-auto max-w-[1170px] px-[15px] py-[30px] text-center">
             <div className={`${eyebrow} text-[#13302a]`}>Reviews</div>
-            <h2 className={h2}>What owners say</h2>
+            <h2 className={h2}>What clients say</h2>
             <div className="mt-8 grid gap-6 text-left md:grid-cols-3">
               {TESTIMONIALS.map((t) => (
                 <figure key={t.name} className="bg-white p-6">
@@ -133,7 +132,7 @@ export default function Home() {
 
 const FAQ = [
   { q: 'Where does the money come from?', a: 'A New York City agency is holding money that belongs to you or your company. Once you sign, we show you which agency and the record number.' },
-  { q: 'Can I claim it myself?', a: 'Yes, you can contact the agency directly at no cost. Owners who try often get stuck: tracking down years-old payment records, sorting out who the original payer was, or finding the money applied to another balance. We’ve handled these before and know how to resolve them.' },
+  { q: 'Can I claim it myself?', a: 'Yes, you can contact the agency directly at no cost. People who try often get stuck: tracking down years-old payment records, sorting out who the original payer was, or finding the money applied to another balance. We’ve handled these before and know how to resolve them.' },
   { q: 'What does it cost?', a: '15% of what we recover. Nothing upfront, and you don’t pay unless we recover your funds.' },
   { q: 'Why doesn’t the letter name the agency?', a: 'Finding the money is the work we do. Once you sign, the agency, record number and property appear in your portal right away.' },
   { q: 'How do I get paid?', a: 'The agency mails the check to us. We verify everything is correct and mail it on to you, then invoice our fee.' },
