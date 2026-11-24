@@ -18,7 +18,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
       <input name="password" type="password" required autoFocus placeholder="Password"
         className="mt-4 w-full rounded border border-[#cfcac0] px-3 py-2" />
       {e && <p className="mt-2 text-sm text-red-700">Wrong password.</p>}
-      <button className="mt-4 w-full rounded bg-[#1f3a4d] px-4 py-2 text-white">Sign in</button>
+      <button className="mt-4 w-full rounded bg-[#13302a] px-4 py-2 text-white">Sign in</button>
     </form>
   );
 }

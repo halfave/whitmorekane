@@ -113,7 +113,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
           <label className="text-xs">Credit owed*<input name="amount" required className={inp} /></label>
           <label className="text-xs">Fee %<input name="fee_pct" defaultValue="15" className={inp} /></label>
         </div>
-        <button className="mt-4 rounded bg-[#1f3a4d] px-4 py-2 text-sm text-white">Create claim and code</button>
+        <button className="mt-4 rounded bg-[#13302a] px-4 py-2 text-sm text-white">Create claim and code</button>
       </form>
     </div>
   );

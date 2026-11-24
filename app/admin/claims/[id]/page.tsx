@@ -113,7 +113,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
             <select name="status" defaultValue={c.status} className={inp}>{STATUSES.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}</select>
           </label>
           <label className="text-xs">Internal notes<input name="admin_notes" defaultValue={c.admin_notes || ''} className={inp} /></label>
-          <button className="rounded bg-[#1f3a4d] px-4 py-2 text-sm text-white">Save</button>
+          <button className="rounded bg-[#13302a] px-4 py-2 text-sm text-white">Save</button>
         </form>
       </div>
 
@@ -146,7 +146,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
           <label className="text-xs">Amount<input name="amount" required className={inp} /></label>
           <label className="text-xs">Date<input name="occurred_on" type="date" defaultValue={today} className={inp} /></label>
           <label className="text-xs">Method / ref<input name="reference" placeholder="check #, Zelle…" className={inp} /></label>
-          <button className="rounded border border-[#1f3a4d] px-3 py-1.5 text-sm">Add</button>
+          <button className="rounded border border-[#13302a] px-3 py-1.5 text-sm">Add</button>
         </form>
         {Number(l?.refunded || 0) > 0 && (
           <form action={invoiceFee} className="mt-3">

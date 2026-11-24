@@ -38,7 +38,7 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
       <Steps step={step} />
       <div className={card}>
         <div className="text-xs uppercase tracking-wider text-[#6b7480]">Claim {view.code}</div>
-        <h1 className="mt-1 font-serif text-2xl">{view.respondent}</h1>
+        <h1 className="mt-1 font-[family-name:var(--font-serif)] text-2xl">{view.respondent}</h1>
         <div className="mt-4 text-4xl font-semibold">{usd(view.amount)}</div>
         <p className="mt-1 text-sm text-[#4a5561]">Held by {view.agency}{view.signed ? '' : ' on your behalf'}.</p>
         {view.details && (
@@ -56,7 +56,7 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
       {step === 2 && <InfoStep code={code} zip={zip} respondent={view.respondent} onDone={() => setDone(true)} />}
       {step === 3 && (
         <div className={card}>
-          <h2 className="font-serif text-xl">Thank you. Your claim is submitted.</h2>
+          <h2 className="font-[family-name:var(--font-serif)] text-xl">Thank you. Your claim is submitted.</h2>
           <p className="mt-2 text-sm text-[#4a5561]">
             We'll file the refund request and email you as it moves forward. The agency mails the check directly to the original payer.
           </p>
@@ -71,7 +71,7 @@ function Steps({ step }: { step: number }) {
   return (
     <ol className="flex gap-2 text-xs">
       {s.map((l, i) => (
-        <li key={l} className={`flex-1 rounded border px-3 py-2 ${i + 1 <= step ? 'border-[#1f3a4d] bg-[#1f3a4d] text-white' : 'border-[#e3e0d8] bg-white text-[#6b7480]'}`}>
+        <li key={l} className={`flex-1 rounded border px-3 py-2 ${i + 1 <= step ? 'border-[#13302a] bg-[#13302a] text-white' : 'border-[#e3e0d8] bg-white text-[#6b7480]'}`}>
           {i + 1}. {l}
         </li>
       ))}
@@ -93,14 +93,14 @@ function SignStep({ view, code, zip, onSigned }: { view: View; code: string; zip
 
   return (
     <form onSubmit={sign} className={card}>
-      <h2 className="font-serif text-xl">Step 1: Sign the authorization</h2>
+      <h2 className="font-[family-name:var(--font-serif)] text-xl">Step 1: Sign the authorization</h2>
       <pre className="mt-4 max-h-80 overflow-auto whitespace-pre-wrap rounded border border-[#e3e0d8] bg-[#fbfaf7] p-4 font-sans text-xs leading-relaxed">{text}</pre>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className="text-sm">Full name<input required className={input} value={f.signerName} onChange={(e) => setF({ ...f, signerName: e.target.value })} /></label>
         <label className="text-sm">Title (e.g. Member, Manager)<input className={input} value={f.signerTitle} onChange={(e) => setF({ ...f, signerTitle: e.target.value })} /></label>
         <label className="text-sm sm:col-span-2">Email<input required type="email" className={input} value={f.signerEmail} onChange={(e) => setF({ ...f, signerEmail: e.target.value })} /></label>
         <label className="text-sm sm:col-span-2">Type your full name to sign
-          <input required className={`${input} font-serif text-lg italic`} value={f.typedSignature} onChange={(e) => setF({ ...f, typedSignature: e.target.value })} />
+          <input required className={`${input} font-[family-name:var(--font-serif)] text-lg italic`} value={f.typedSignature} onChange={(e) => setF({ ...f, typedSignature: e.target.value })} />
         </label>
       </div>
       <label className="mt-4 flex items-start gap-2 text-sm">
@@ -108,7 +108,7 @@ function SignStep({ view, code, zip, onSigned }: { view: View; code: string; zip
         I am authorized to act for {view.respondent}, and I agree to the terms above.
       </label>
       {err && <p className="mt-3 text-sm text-red-700">{err}</p>}
-      <button disabled={busy || !f.accept} className="mt-5 rounded bg-[#1f3a4d] px-5 py-2 text-white disabled:opacity-50">{busy ? 'Signing…' : 'Sign and continue'}</button>
+      <button disabled={busy || !f.accept} className="mt-5 rounded bg-[#13302a] px-5 py-2 text-white disabled:opacity-50">{busy ? 'Signing…' : 'Sign and continue'}</button>
     </form>
   );
 }
@@ -151,7 +151,7 @@ function InfoStep({ code, zip, respondent, onDone }: { code: string; zip: string
 
   return (
     <form onSubmit={submit} className={card}>
-      <h2 className="font-serif text-xl">Step 2: Your information and documents</h2>
+      <h2 className="font-[family-name:var(--font-serif)] text-xl">Step 2: Your information and documents</h2>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className="text-sm sm:col-span-2">Owner / entity name<input required className={input} value={f.entityName} onChange={set('entityName')} /></label>
         <label className="text-sm">Contact name<input required className={input} value={f.contactName} onChange={set('contactName')} /></label>
@@ -174,7 +174,7 @@ function InfoStep({ code, zip, respondent, onDone }: { code: string; zip: string
       </div>
       <label className="mt-4 block text-sm">Notes<textarea rows={2} className={input} value={f.notes} onChange={set('notes')} /></label>
       {err && <p className="mt-3 text-sm text-red-700">{err}</p>}
-      <button disabled={busy} className="mt-5 rounded bg-[#1f3a4d] px-5 py-2 text-white disabled:opacity-50">{busy ? 'Submitting…' : 'Submit claim'}</button>
+      <button disabled={busy} className="mt-5 rounded bg-[#13302a] px-5 py-2 text-white disabled:opacity-50">{busy ? 'Submitting…' : 'Submit claim'}</button>
     </form>
   );
 }
