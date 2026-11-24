@@ -61,6 +61,7 @@ alter table claims         enable row level security;
 alter table authorizations enable row level security;
 alter table claimant_info  enable row level security;
 alter table documents      enable row level security;
+grant select, insert, update, delete on claims, authorizations, claimant_info, documents to service_role;
 revoke all on claims, authorizations, claimant_info, documents from anon, authenticated;
 
 -- Private bucket: files are only reachable through short-lived signed URLs.
