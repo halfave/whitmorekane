@@ -7,7 +7,7 @@ const work = Work_Sans({ subsets: ['latin'], variable: '--font-display', weight:
 
 export const metadata = {
   title: `${FIRM} | Property owner refund recovery`,
-  description: 'We find overpaid fines and penalties held by New York City agencies and help property owners get them back.',
+  description: 'New York City agencies hold money that belongs to property owners. We find it and get it back to you.',
 };
 
 const NAV: [string, string][] = [
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="mx-auto grid max-w-[1170px] gap-8 px-[15px] py-10 text-[13px] sm:grid-cols-[1.2fr_1fr_1fr]">
             <div>
               <div className="text-[15px] font-semibold text-[#13302a]">{FIRM}</div>
-              <p className="mt-2 max-w-xs text-[#4a5550]">Refund recovery for New York property owners. We find credits on public agency records and handle the paperwork.</p>
+              <p className="mt-2 max-w-xs text-[#4a5550]">Recovering money New York City agencies hold for property owners. You don’t pay unless we recover your funds.</p>
             </div>
             <div className="grid content-start gap-1.5">
               {NAV.map(([l, h]) => <Link key={h} href={h} className="text-[#4a5550] hover:text-[#13302a]">{l}</Link>)}

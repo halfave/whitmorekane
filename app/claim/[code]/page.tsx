@@ -112,8 +112,8 @@ function Summary({ view }: { view: View }) {
         <div className="mt-1 text-[36px] font-medium leading-none text-[#13302a]">{usd(view.amount)}</div>
       </div>
       <p className="bg-[#f4efe6] p-3 text-[12px] leading-relaxed text-[#4a5550] sm:col-span-2">
-        You can recover these funds yourself from the holding agency at no cost. {FIRM} handles the research, paperwork and
-        follow-up for {view.feePct}% of what the agency actually refunds. You pay nothing unless you are paid.
+        You can contact the holding agency yourself at no cost. {FIRM} handles the paperwork, the agency and any issues that come
+        up for {view.feePct}% of what we recover. You don’t pay unless we recover your funds.
       </p>
     </div>
   );
@@ -147,7 +147,8 @@ function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; 
       </div>
       <label className="mt-4 flex items-start gap-2 text-[14px]">
         <input type="checkbox" checked={f.accept} onChange={(e) => setF({ ...f, accept: e.target.checked })} className="mt-1 accent-[#13302a]" />
-        I am authorized to act for {view.respondent}, and I agree to the terms above and to sign electronically.
+        I am authorized to act for {view.respondent}. I agree to the terms above, including that this agreement can’t be
+        cancelled once signed, and to sign electronically.
       </label>
       {err && <p className="mt-3 text-[14px] text-red-700">{err}</p>}
       <button disabled={busy || !f.accept} className={`mt-6 ${btn}`}>{busy ? 'Signing…' : 'Sign and continue'}</button>
@@ -198,14 +199,14 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
     <form onSubmit={submit} className="grid gap-6">
       <div className={card}>
         <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 2 · Your details</h2>
-        <p className="mt-2 text-[14px] text-[#4a5550]">These go on the agency’s refund request. The check is mailed to the address you give.</p>
+        <p className="mt-2 text-[14px] text-[#4a5550]">These go on the agency’s refund request. The agency mails the check to us, and we mail it on to you.</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <label className={`${label} sm:col-span-2`}>Owner / company name<input required className={input} value={f.entityName} onChange={set('entityName')} /></label>
           <label className={label}>Contact name<input required className={input} value={f.contactName} onChange={set('contactName')} /></label>
           <label className={label}>Title<input className={input} value={f.contactTitle} onChange={set('contactTitle')} /></label>
           <label className={label}>Phone<input className={input} value={f.phone} onChange={set('phone')} /></label>
           <label className={label}>Email<input required type="email" className={input} value={f.email} onChange={set('email')} /></label>
-          <label className={`${label} sm:col-span-2`}>Mailing address for the refund check<textarea required rows={2} className={input} value={f.mailingAddress} onChange={set('mailingAddress')} /></label>
+          <label className={`${label} sm:col-span-2`}>Where should we mail your check?<textarea required rows={2} className={input} value={f.mailingAddress} onChange={set('mailingAddress')} /></label>
           <label className={label}>Who made the original payment?
             <select className={input} value={f.paidBy} onChange={set('paidBy')}>
               <option value="yes">The owner above</option><option value="no">Someone else (agent, contractor…)</option><option value="unsure">Not sure</option>
@@ -313,8 +314,9 @@ function Track({ view, code, zip }: { view: View; code: string; zip: string }) {
     { t: 'Authorization signed', done: true },
     { t: 'Refund request signed', done: true },
     { t: `Filed with ${view.agency}`, done: filed, d: filed ? (view.filedAt ? new Date(view.filedAt).toLocaleDateString() : '') : 'We file within 2 business days.' },
-    { t: 'Agency review', done: paid, d: paid ? '' : 'Agencies typically take several weeks. They may first apply the credit to any other balance you owe.' },
-    { t: 'Refund check mailed to you', done: paid, d: paid ? '' : 'The agency mails it directly to you. Then we invoice our fee.' },
+    { t: 'Agency review', done: paid, d: paid ? '' : 'Agencies typically take several weeks. We handle any questions or issues that come up.' },
+    { t: 'Check received and verified', done: paid, d: paid ? '' : 'The agency mails the check to us and we confirm it’s correct.' },
+    { t: 'Check mailed to you', done: view.status === 'closed', d: view.status === 'closed' ? '' : 'Sent by tracked mail within 5 business days, with our invoice.' },
   ];
   return (
     <div className={card}>

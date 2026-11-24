@@ -1,46 +1,27 @@
 import Link from 'next/link';
-import FindPayment from '@/components/FindPayment';
 
 export const metadata = { title: 'How it works | Whitmore Kane & Associates' };
 
 const STEPS = [
-  {
-    t: 'Look up your claim',
-    time: '1 minute',
-    d: 'Enter the claim code and ZIP code from your letter. You’ll see the amount and that it’s held by a New York City agency.',
-  },
-  {
-    t: 'Sign the authorization',
-    time: '2 minutes',
-    d: 'Read our short agreement and sign with your mouse or finger. It states our fee and that you can cancel free before we file. Once you sign, we show you the agency, record number and property.',
-  },
-  {
-    t: 'Add your details and documents',
-    time: '5 minutes',
-    d: 'Tell us where to mail the refund check, upload a photo ID for the signer, and add your payment confirmation. See below for where to find it.',
-  },
-  {
-    t: 'Review and sign the refund request',
-    time: '2 minutes',
-    d: 'We fill in the agency’s official refund request form from your details. Check it, then sign it electronically. You can download a copy.',
-  },
-  {
-    t: 'We file it',
-    time: 'Within 2 business days',
-    d: 'We send the signed request and your documents to the agency and follow up until it’s decided. You can check progress any time on the Claim status page.',
-  },
-  {
-    t: 'The agency pays you',
-    time: 'Usually several weeks',
-    d: 'The agency mails the refund check directly to you. It may first apply the credit to any other balance you owe the city. After you’re paid, we send our invoice.',
-  },
+  { t: 'Look up your claim', time: '1 minute', d: 'Enter the claim code and ZIP code from your letter. You’ll see how much a New York City agency is holding for you.' },
+  { t: 'Sign the authorization', time: '2 minutes', d: 'Read our short agreement and sign with your mouse or finger. Once you sign, we show you the agency and the record your money is tied to.' },
+  { t: 'Add your details and documents', time: '5 minutes', d: 'Tell us where to send your check, upload a photo ID and answer a few questions about the original payment. We walk you through it.' },
+  { t: 'Sign the refund request', time: '2 minutes', d: 'We prepare the agency’s official paperwork from your details. Review it and sign electronically.' },
+  { t: 'We handle the agency', time: 'Several weeks', d: 'We file everything, answer the agency’s questions and deal with any issues that come up. You can check progress any time on the Claim status page.' },
+  { t: 'You get your check', time: 'When the agency pays', d: 'The agency mails the check to us. We verify everything is correct and mail it on to you, then send our invoice for 15%.' },
 ];
 
 const NEED = [
   ['Your claim code and ZIP', 'Printed at the top of your letter.'],
   ['A photo ID for the signer', 'Driver’s license or passport. A phone photo is fine.'],
-  ['Proof of the original payment', 'CityPay receipt, cancelled check, or bank or card statement page.'],
-  ['The mailing address for the check', 'Where the refund should be sent.'],
+  ['A few payment details', 'We’ll show you exactly what we need and where to find it.'],
+  ['Where to send your check', 'The address you want your money mailed to.'],
+];
+
+const WHY = [
+  ['Old records', 'The agency needs proof of a payment that may be years old. We know where to find it, and how to request it if it’s missing.'],
+  ['The right payer', 'Refunds go to whoever made the original payment, which isn’t always the owner. We sort that out before filing.'],
+  ['Other balances', 'Agencies can apply your money to other balances first. We check for them so there are no surprises.'],
 ];
 
 export default function HowItWorks() {
@@ -50,7 +31,7 @@ export default function HowItWorks() {
         <div className="mx-auto max-w-[900px] px-[15px] py-[60px] text-center">
           <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#a8703f]">How it works</div>
           <h1 className="mt-4 text-[34px] font-medium uppercase leading-[1.1] text-[#13302a] sm:text-[40px]">Your part takes about ten minutes</h1>
-          <p className="mx-auto mt-3 max-w-[560px] text-[#4a5550]">Here’s every step, what you’ll need and how to find your payment confirmation.</p>
+          <p className="mx-auto mt-3 max-w-[560px] text-[#4a5550]">We do the rest. You don’t pay unless we recover your funds.</p>
         </div>
       </section>
 
@@ -84,12 +65,19 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      <section id="find-payment" className="mx-auto max-w-[1170px] px-[15px] py-[60px]">
-        <h2 className="text-[24px] font-medium uppercase text-[#13302a]">How to find your payment confirmation</h2>
+      <section className="mx-auto max-w-[1170px] px-[15px] py-[60px]">
+        <h2 className="text-[24px] font-medium uppercase text-[#13302a]">Why owners use us</h2>
         <p className="mt-2 max-w-[700px] text-[#4a5550]">
-          The agency needs proof of the original payment before it refunds anything. It’s usually years old, so here’s where to look.
+          You can contact the agency yourself. Most owners who try run into at least one of these, and we’ve handled all of them before.
         </p>
-        <div className="mt-8"><FindPayment /></div>
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {WHY.map(([t, d]) => (
+            <div key={t} className="border-t-2 border-[#a8703f] pt-4">
+              <div className="text-[16px] font-medium text-[#13302a]">{t}</div>
+              <p className="mt-1 text-[#4a5550]">{d}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="bg-[#f4efe6]">
