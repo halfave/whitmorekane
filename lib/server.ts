@@ -36,7 +36,7 @@ export function publicView(c: any) {
     status: c.status,
     signed,
     details: signed
-      ? { summons: c.summons_numbers, property: c.property_address }
+      ? { summons: c.violation_number ? [c.violation_number] : c.summons_numbers, property: c.property_address }
       : null,
   };
 }

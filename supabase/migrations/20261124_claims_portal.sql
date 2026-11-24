@@ -68,3 +68,40 @@ revoke all on claims, authorizations, claimant_info, documents from anon, authen
 insert into storage.buckets (id, name, public)
 values ('claim-docs', 'claim-docs', false)
 on conflict (id) do update set public = false;
+
+-- Per-violation claims and payment tracking (applied 2026-11-24).
+alter table claims
+  add column if not exists violation_number text,
+  add column if not exists penalty_imposed numeric(12,2),
+  add column if not exists amount_paid numeric(12,2),
+  add column if not exists respondent_address text,
+  add column if not exists filed_at timestamptz,
+  add column if not exists admin_notes text;
+create unique index if not exists claims_violation_number_key on claims (violation_number) where violation_number is not null;
+
+create table if not exists payments (
+  id uuid primary key default gen_random_uuid(),
+  claim_id uuid not null references claims(id) on delete cascade,
+  kind text not null check (kind in ('refund_received','offset_applied','fee_invoiced','fee_paid','fee_waived')),
+  amount numeric(12,2) not null,
+  occurred_on date not null default current_date,
+  method text,
+  reference text,
+  notes text,
+  created_at timestamptz not null default now()
+);
+alter table payments enable row level security;
+revoke all on payments from anon, authenticated;
+grant select, insert, update, delete on payments to service_role;
+
+create or replace view claim_ledger with (security_invoker = true) as
+select c.id as claim_id,
+  coalesce(sum(p.amount) filter (where p.kind = 'refund_received'), 0) as refunded,
+  coalesce(sum(p.amount) filter (where p.kind = 'offset_applied'), 0) as offset,
+  coalesce(sum(p.amount) filter (where p.kind = 'fee_invoiced'), 0) as fee_invoiced,
+  coalesce(sum(p.amount) filter (where p.kind = 'fee_paid'), 0) as fee_paid,
+  coalesce(sum(p.amount) filter (where p.kind = 'fee_waived'), 0) as fee_waived
+from claims c left join payments p on p.claim_id = c.id
+group by c.id;
+revoke all on claim_ledger from anon, authenticated;
+grant select on claim_ledger to service_role;

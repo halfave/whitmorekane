@@ -20,6 +20,9 @@ const FAQ = [
   { q: 'Can I cancel?', a: 'Yes, at no cost, any time before we file the request.' },
 ];
 
+// Real client quotes only, with their permission. The section stays hidden while empty.
+const TESTIMONIALS: { quote: string; name: string; detail: string }[] = [];
+
 export default function WkHome() {
   const router = useRouter();
   const [code, setCode] = useState('');
@@ -90,6 +93,20 @@ export default function WkHome() {
           ))}
         </div>
       </section>
+
+      {TESTIMONIALS.length > 0 && (
+        <section>
+          <h2 className="font-serif text-2xl">What owners say</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {TESTIMONIALS.map((t) => (
+              <figure key={t.name} className="rounded-lg border border-[#e3e0d8] bg-white p-5">
+                <blockquote className="text-sm text-[#1d2630]">"{t.quote}"</blockquote>
+                <figcaption className="mt-2 text-xs text-[#6b7480]">{t.name} · {t.detail}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="rounded-lg border border-[#e3e0d8] bg-white p-6">
         <h2 className="font-serif text-xl">Contact</h2>
