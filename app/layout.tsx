@@ -1,9 +1,11 @@
 import './globals.css';
 import Link from 'next/link';
-import { Work_Sans } from 'next/font/google';
+import { Work_Sans, Cormorant_Garamond } from 'next/font/google';
+import Logo from '@/components/Logo';
 import { FIRM } from '@/lib/agreement';
 
 const work = Work_Sans({ subsets: ['latin'], variable: '--font-display', weight: ['400', '500', '600', '700'] });
+const serif = Cormorant_Garamond({ subsets: ['latin'], variable: '--font-serif', weight: ['600', '700'], style: ['normal', 'italic'] });
 
 export const metadata = {
   title: `${FIRM} | Property owner refund recovery`,
@@ -20,14 +22,11 @@ const NAV: [string, string][] = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={work.variable}>
+    <html lang="en" className={`${work.variable} ${serif.variable}`}>
       <body className="min-h-screen bg-white font-[family-name:var(--font-display)] text-[14px] leading-[1.45] text-[#333] antialiased">
         <header className="sticky top-0 z-30 bg-gradient-to-r from-[#0c1f1b] to-[#14332c] text-white">
           <div className="mx-auto flex h-[74px] max-w-[1170px] items-center justify-between gap-4 px-[15px]">
-            <Link href="/" className="flex items-center gap-3">
-              <span className="grid h-[34px] w-[34px] place-items-center rounded-[4px] bg-[#f4ead8] text-[15px] font-bold tracking-tight text-[#a8703f]">WK</span>
-              <span className="text-[17px] font-semibold">Whitmore Kane &amp; Assoc.</span>
-            </Link>
+            <Link href="/" aria-label="Whitmore Kane & Associates home"><Logo /></Link>
             <nav className="hidden items-center gap-7 text-[13px] font-medium md:flex">
               {NAV.map(([l, h]) => <Link key={h} href={h} className="text-white/90 hover:text-[#e0b083]">{l}</Link>)}
             </nav>
@@ -41,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="border-t border-[#e6e0d5] bg-[#f4efe6]">
           <div className="mx-auto grid max-w-[1170px] gap-8 px-[15px] py-10 text-[13px] sm:grid-cols-[1.2fr_1fr_1fr]">
             <div>
-              <div className="text-[15px] font-semibold text-[#13302a]">{FIRM}</div>
+              <Logo dark={false} />
               <p className="mt-2 max-w-xs text-[#4a5550]">Recovering money New York City agencies hold for property owners. You don’t pay unless we recover your funds.</p>
             </div>
             <div className="grid content-start gap-1.5">
