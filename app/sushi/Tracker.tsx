@@ -117,7 +117,7 @@ function RowView({ r, open, toggle }: { r: Row; open: boolean; toggle: () => voi
   const Doc = ({ ok, label, href }: { ok: boolean; label: string; href?: string }) => ok && href
     ? <a href={href} target="_blank" rel="noreferrer" className="rounded bg-emerald-50 px-1.5 py-0.5 text-[12px] text-emerald-800 ring-1 ring-emerald-200 hover:bg-emerald-100">{label} ✓</a>
     : <span className="rounded bg-stone-50 px-1.5 py-0.5 text-[12px] text-stone-400 ring-1 ring-stone-200">{label}</span>;
-  const ppuHref = ppu[0]?.url || (r.ppuDraft ? `/api/admin/claims/${r.id}/ppu1` : undefined);
+  const ppuHref = ppu[0]?.url || `/api/admin/claims/${r.id}/ppu1`;
 
   return (
     <>
@@ -144,7 +144,7 @@ function RowView({ r, open, toggle }: { r: Row; open: boolean; toggle: () => voi
             )}
           </div>
         </td>
-        <td className="px-3 py-2.5"><div className="flex gap-1"><Doc ok={!!ppuHref} label="PPU1" href={ppuHref} /><Doc ok={!!pop[0]} label="Proof" href={pop[0]?.url} /></div></td>
+        <td className="px-3 py-2.5"><div className="flex gap-1">{ppu[0] || r.ppuSigned ? <Doc ok label="PPU1" href={ppuHref} /> : <a href={ppuHref} target="_blank" rel="noreferrer" className="rounded bg-white px-1.5 py-0.5 text-[12px] text-[#a8703f] ring-1 ring-[#e3c9a8] hover:bg-[#fbf3ea]">PPU1 draft</a>}<Doc ok={!!pop[0]} label="Proof" href={pop[0]?.url} /></div></td>
         <td className="whitespace-nowrap px-3 py-2.5 text-[#4a5550]">{dt(r.filedAt)}</td>
         <td className="px-3 py-2.5 text-right">
           <button onClick={toggle} className="tabular-nums hover:underline">

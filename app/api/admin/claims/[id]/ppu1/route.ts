@@ -7,7 +7,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   if (!(await isAdmin())) return new NextResponse('Unauthorized', { status: 401 });
   const { id } = await params;
   const bytes = await ppu1ForClaim(id);
-  if (!bytes) return new NextResponse('Claimant info not submitted yet.', { status: 400 });
+  if (!bytes) return new NextResponse('Not found', { status: 404 });
   const { data: c } = await admin.from('claims').select('violation_number,claim_code').eq('id', id).single();
   return new NextResponse(Buffer.from(bytes), {
     headers: {

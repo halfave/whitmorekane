@@ -108,7 +108,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
           <div><dt className="inline text-[#6b7480]">Filed: </dt><dd className="inline">{c.filed_at ? new Date(c.filed_at).toLocaleDateString() : '—'}</dd></div>
           <div><dt className="inline text-[#6b7480]">Refund request signed: </dt><dd className="inline">{c.refund_request_signed_at ? `${new Date(c.refund_request_signed_at).toLocaleString()} by ${c.refund_request_signer || '—'} (IP ${c.refund_request_ip || '—'})` : '—'}</dd></div>
         </dl>
-        {info && (
+        {(
           <div className="mt-4 flex flex-wrap gap-3 text-sm">
             <a href={`/api/admin/claims/${c.id}/ppu1`} target="_blank" rel="noreferrer" className="rounded border border-[#13302a] px-3 py-1.5">
               {c.refund_request_signed_at ? 'Download signed PPU1' : 'Preview PPU1 (unsigned)'}
