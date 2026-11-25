@@ -171,7 +171,7 @@ function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; 
           </label>
           {sent && !emailOk && (
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <input inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="6-digit code" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))} className={`${input} mt-0 w-40 tracking-[0.3em]`} />
+              <input inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="6-digit code" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))} className={`${input} mt-0 tracking-[0.3em]`} style={{ width: 160 }} />
               <button type="button" disabled={vBusy || otp.length !== 6} onClick={() => verify('check')} className="rounded-full bg-[#13302a] px-4 py-2 text-[13px] font-medium text-white disabled:opacity-40">Confirm</button>
               <span className="text-[12px] text-[#6b756f]">Check your inbox for a code from Whitmore Kane.</span>
             </div>
