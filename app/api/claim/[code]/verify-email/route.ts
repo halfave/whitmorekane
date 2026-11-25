@@ -22,9 +22,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ cod
     const { count } = await admin.from('email_codes').select('id', { count: 'exact', head: true }).eq('claim_id', claim.id).gte('created_at', since);
     if ((count || 0) >= 5) return NextResponse.json({ error: 'Too many codes sent. Try again in an hour.' }, { status: 429 });
     const otp = String(randomInt(0, 1_000_000)).padStart(6, '0');
-    await admin.from('email_codes').insert({
+    const { error: insErr } = await admin.from('email_codes').insert({
       claim_id: claim.id, email, code_hash: h(claim.id, email, otp), expires_at: new Date(Date.now() + 15 * 60_000).toISOString(),
     });
+    if (insErr) return NextResponse.json({ error: 'Could not create a code. Please try again.' }, { status: 500 });
     const ok = await sendMail({
       to: email,
       subject: `Your Whitmore Kane code: ${otp}`,

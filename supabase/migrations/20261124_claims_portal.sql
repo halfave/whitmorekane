@@ -147,3 +147,4 @@ create table if not exists public.email_codes (
 create index if not exists email_codes_claim_idx on public.email_codes(claim_id, created_at desc);
 alter table public.email_codes enable row level security;
 revoke all on public.email_codes from anon, authenticated;
+grant select, insert, update, delete on public.email_codes to service_role;
