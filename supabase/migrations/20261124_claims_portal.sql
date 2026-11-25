@@ -125,3 +125,25 @@ alter table public.claims drop constraint claims_status_check;
 alter table public.claims add constraint claims_status_check check (status = any (array['found','sent','viewed','signed','info_submitted','filed','paid','closed','declined']));
 alter table public.documents drop constraint documents_kind_check;
 alter table public.documents add constraint documents_kind_check check (kind = any (array['photo_id','proof_of_payment','authority','other','ppu1','refund_check','agency_letter']));
+
+-- 2026-11-25: e-signature hardening.
+alter table public.authorizations
+  add column if not exists agreement_text text,
+  add column if not exists esign_consent_at timestamptz,
+  add column if not exists esign_disclosure_version text,
+  add column if not exists email_verified_at timestamptz,
+  add column if not exists copy_emailed_at timestamptz;
+alter table public.claims
+  add column if not exists refund_request_ua text,
+  add column if not exists refund_request_pdf_path text,
+  add column if not exists refund_request_sha256 text,
+  add column if not exists refund_request_copy_emailed_at timestamptz;
+create table if not exists public.email_codes (
+  id uuid primary key default gen_random_uuid(),
+  claim_id uuid not null references public.claims(id) on delete cascade,
+  email text not null, code_hash text not null, expires_at timestamptz not null,
+  attempts int not null default 0, verified_at timestamptz, created_at timestamptz not null default now()
+);
+create index if not exists email_codes_claim_idx on public.email_codes(claim_id, created_at desc);
+alter table public.email_codes enable row level security;
+revoke all on public.email_codes from anon, authenticated;

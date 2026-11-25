@@ -1,6 +1,7 @@
 'use client';
 import { use, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { ESIGN_DISCLOSURE } from '@/lib/esign';
 import { agreementText, FIRM } from '@/lib/agreement';
 import SignaturePad from '@/components/SignaturePad';
 import PaymentExamples from '@/components/PaymentExamples';
@@ -124,13 +125,26 @@ function Summary({ view }: { view: View }) {
 }
 
 function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; zip: string; onDone: (v: View) => void }) {
-  const [f, setF] = useState({ signerName: '', signerTitle: '', signerEmail: '', accept: false });
+  const [f, setF] = useState({ signerName: '', signerTitle: '', signerEmail: '', accept: false, esignConsent: false });
   const [sig, setSig] = useState('');
-  const [err, setErr] = useState(''); const [busy, setBusy] = useState(false);
+  const [otp, setOtp] = useState(''); const [sent, setSent] = useState(false); const [verified, setVerified] = useState('');
+  const [showEsign, setShowEsign] = useState(false);
+  const [err, setErr] = useState(''); const [busy, setBusy] = useState(false); const [vBusy, setVBusy] = useState(false);
   const text = agreementText({ respondent: view.respondent, amount: view.amount, feePct: view.feePct });
+  const emailOk = verified && verified === f.signerEmail.trim().toLowerCase();
+
+  async function verify(step: 'send' | 'check') {
+    setVBusy(true); setErr('');
+    const r = await post(`/api/claim/${code}/verify-email`, { step, email: f.signerEmail, otp, zip });
+    const j = await r.json(); setVBusy(false);
+    if (!r.ok) return setErr(j.error);
+    if (step === 'send') { setSent(true); setOtp(''); }
+    else setVerified(f.signerEmail.trim().toLowerCase());
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!emailOk) return setErr('Please confirm your email first.');
     if (!sig) return setErr('Please draw your signature.');
     setBusy(true); setErr('');
     const r = await post(`/api/claim/${code}/sign`, { ...f, signaturePng: sig, zip });
@@ -141,21 +155,45 @@ function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; 
   return (
     <form onSubmit={submit} className={card}>
       <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 1 · Sign the agreement</h2>
-      <p className="mt-2 text-[14px] text-[#4a5550]">Read the agreement, then sign below. It takes about a minute.</p>
+      <p className="mt-2 text-[14px] text-[#4a5550]">Read the agreement, confirm your email, then sign. We’ll email you a signed copy.</p>
       <pre className="mt-5 max-h-72 overflow-auto whitespace-pre-wrap border border-[#e6e0d5] bg-[#fbf9f5] p-4 font-[family-name:var(--font-display)] text-[13px] leading-relaxed text-[#2b3631]">{text}</pre>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <label className={label}>Your full name<input required className={input} value={f.signerName} onChange={(e) => setF({ ...f, signerName: e.target.value })} /></label>
         <label className={label}>Title (e.g. Member, Managing Agent)<input className={input} value={f.signerTitle} onChange={(e) => setF({ ...f, signerTitle: e.target.value })} /></label>
-        <label className={`${label} sm:col-span-2`}>Email<input required type="email" className={input} value={f.signerEmail} onChange={(e) => setF({ ...f, signerEmail: e.target.value })} /></label>
+        <div className="sm:col-span-2">
+          <label className={label}>Email
+            <div className="mt-1 flex gap-2">
+              <input required type="email" className={`${input} mt-0`} value={f.signerEmail} onChange={(e) => { setF({ ...f, signerEmail: e.target.value }); setSent(false); }} />
+              {emailOk
+                ? <span className="shrink-0 self-center text-[14px] font-medium text-green-800">✓ Confirmed</span>
+                : <button type="button" disabled={vBusy || !f.signerEmail} onClick={() => verify('send')} className="shrink-0 rounded-full border border-[#13302a] px-4 text-[13px] font-medium text-[#13302a] disabled:opacity-40">{sent ? 'Resend code' : 'Send code'}</button>}
+            </div>
+          </label>
+          {sent && !emailOk && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <input inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="6-digit code" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))} className={`${input} mt-0 w-40 tracking-[0.3em]`} />
+              <button type="button" disabled={vBusy || otp.length !== 6} onClick={() => verify('check')} className="rounded-full bg-[#13302a] px-4 py-2 text-[13px] font-medium text-white disabled:opacity-40">Confirm</button>
+              <span className="text-[12px] text-[#6b756f]">Check your inbox for a code from Whitmore Kane.</span>
+            </div>
+          )}
+        </div>
         <div className="sm:col-span-2"><div className={label}>Signature</div><div className="mt-1"><SignaturePad onChange={setSig} /></div></div>
       </div>
-      <label className="mt-4 flex items-start gap-2 text-[14px]">
+      <label className="mt-5 flex items-start gap-2 text-[14px]">
+        <input type="checkbox" checked={f.esignConsent} onChange={(e) => setF({ ...f, esignConsent: e.target.checked })} className="mt-1 accent-[#13302a]" />
+        <span>
+          I agree to use electronic records and signatures for this claim, and I can open and keep PDF files.{' '}
+          <button type="button" onClick={() => setShowEsign(!showEsign)} className="text-[#a8703f] underline">{showEsign ? 'Hide details' : 'Read the details'}</button>
+        </span>
+      </label>
+      {showEsign && <pre className="mt-2 max-h-60 overflow-auto whitespace-pre-wrap border border-[#e6e0d5] bg-[#fbf9f5] p-4 font-[family-name:var(--font-display)] text-[12px] leading-relaxed text-[#2b3631]">{ESIGN_DISCLOSURE}</pre>}
+      <label className="mt-3 flex items-start gap-2 text-[14px]">
         <input type="checkbox" checked={f.accept} onChange={(e) => setF({ ...f, accept: e.target.checked })} className="mt-1 accent-[#13302a]" />
         I am authorized to act for {view.respondent}. I agree to the terms above, including that I can cancel only until the
-        refund request is filed, and to sign electronically.
+        refund request is filed.
       </label>
       {err && <p className="mt-3 text-[14px] text-red-700">{err}</p>}
-      <button disabled={busy || !f.accept} className={`mt-6 ${btn}`}>{busy ? 'Signing…' : 'Sign and continue'}</button>
+      <button disabled={busy || !f.accept || !f.esignConsent || !emailOk} className={`mt-6 ${btn}`}>{busy ? 'Signing…' : 'Sign and continue'}</button>
     </form>
   );
 }

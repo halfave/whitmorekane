@@ -15,7 +15,7 @@ export default function Privacy() {
             <li>Your electronic signature</li>
             <li>Details and records of the original payment, such as receipts or bank or card statement pages</li>
           </ul>
-          <p>When you sign a document, we also record your IP address, your browser and the date and time, so we can verify the signature. Our hosting provider keeps standard server logs.</p>
+          <p>Before you sign, we confirm your email with a one-time code. When you sign a document, we also record your IP address, your browser and the date and time, keep a copy of exactly what you signed, and email you a copy. Our hosting provider keeps standard server logs.</p>
         </>],
         ['How we use information', <>
           <p>We use your information only to handle your claim and run our business:</p>
