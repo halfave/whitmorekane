@@ -102,7 +102,6 @@ function Summary({ view }: { view: View }) {
           <dl className="mt-3 grid gap-1 text-[14px]">
             <div><dt className="inline text-[#6b756f]">Record number: </dt><dd className="inline font-medium">{view.details.summons.join(', ')}</dd></div>
             {view.details.property && <div><dt className="inline text-[#6b756f]">Property: </dt><dd className="inline">{view.details.property}</dd></div>}
-            <div><dt className="inline text-[#6b756f]">May be owed to you: </dt><dd className="inline">{usd(view.amount)}</dd></div>
           </dl>
         ) : (
           <p className="mt-2 text-[13px] text-[#6b756f]">The agency, record number and property appear here once you sign.</p>
