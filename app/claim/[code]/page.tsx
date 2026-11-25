@@ -4,10 +4,12 @@ import { supabase } from '@/lib/supabase';
 import { agreementText, FIRM } from '@/lib/agreement';
 import SignaturePad from '@/components/SignaturePad';
 import FindPayment from '@/components/FindPayment';
+import PaymentExamples from '@/components/PaymentExamples';
+import AddressLookup from '@/components/AddressLookup';
 
 type View = {
   code: string; respondent: string; amount: number; agency: string; feePct: number; status: string;
-  signed: boolean; hasInfo: boolean; docs: string[]; refundRequestSigned: boolean; filedAt: string | null;
+  signed: boolean; hasInfo: boolean; hasForwardAddress: boolean; docs: string[]; refundRequestSigned: boolean; filedAt: string | null; respondentAddress?: string | null;
   details: { summons: string[]; property: string | null; penalty: number | null; paid: number | null } | null;
 };
 
@@ -60,7 +62,7 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
         {step === 1 && <AuthorizeStep view={view!} code={code} zip={zip} onDone={setView} />}
         {step === 2 && <DetailsStep view={view!} code={code} zip={zip} onDone={setView} />}
         {step === 3 && <RefundRequestStep code={code} zip={zip} agency={view!.agency} onDone={setView} />}
-        {step === 4 && <Track view={view!} code={code} zip={zip} />}
+        {step === 4 && <Track view={view!} code={code} zip={zip} onDone={setView} />}
         <p className="text-center text-[13px] text-[#6b756f]">
           Questions? Email <a className="underline" href={`mailto:claims@whitmorekane.com?subject=Claim%20${code}`}>claims@whitmorekane.com</a> with your claim code.
         </p>
@@ -70,17 +72,18 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
 }
 
 function Steps({ step }: { step: number }) {
-  const s = ['Authorize', 'Details & documents', 'Sign refund request', 'Track'];
+  const s = ['Sign the agreement', 'Payment details', 'Sign the refund request'];
   return (
-    <ol className="mx-auto mt-8 grid max-w-2xl grid-cols-4 gap-2 text-left">
+    <ol className="mx-auto mt-8 grid max-w-2xl grid-cols-3 gap-3 text-left">
       {s.map((l, i) => {
         const n = i + 1, done = n < step, now = n === step;
         return (
           <li key={l} className="grid gap-2">
-            <div className={`h-1 rounded-full ${done || now ? 'bg-[#a8703f]' : 'bg-[#ddd5c7]'}`} />
-            <div className={`text-[11px] font-semibold uppercase tracking-wide sm:text-[12px] ${now ? 'text-[#13302a]' : done ? 'text-[#a8703f]' : 'text-[#9a9388]'}`}>
-              {done ? '✓ ' : `${n}. `}{l}
+            <div className={`h-1.5 rounded-full ${done || now ? 'bg-[#a8703f]' : 'bg-[#ddd5c7]'}`} />
+            <div className={`text-[11px] font-bold uppercase tracking-[0.15em] ${now ? 'text-[#a8703f]' : done ? 'text-[#a8703f]' : 'text-[#9a9388]'}`}>
+              {done ? '✓ Done' : `Step ${n}`}
             </div>
+            <div className={`text-[13px] font-medium sm:text-[14px] ${now ? 'text-[#13302a]' : done ? 'text-[#4a5550]' : 'text-[#9a9388]'}`}>{l}</div>
           </li>
         );
       })}
@@ -134,7 +137,7 @@ function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; 
 
   return (
     <form onSubmit={submit} className={card}>
-      <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 1 · Authorize us to recover it</h2>
+      <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 1 · Sign the agreement</h2>
       <p className="mt-2 text-[14px] text-[#4a5550]">Read the agreement, then sign below. It takes about a minute.</p>
       <pre className="mt-5 max-h-72 overflow-auto whitespace-pre-wrap border border-[#e6e0d5] bg-[#fbf9f5] p-4 font-[family-name:var(--font-display)] text-[13px] leading-relaxed text-[#2b3631]">{text}</pre>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -156,9 +159,8 @@ function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; 
 
 function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zip: string; onDone: (v: View) => void }) {
   const [f, setF] = useState({
-    entityName: view.respondent, contactName: '', contactTitle: '', phone: '', email: '', mailingAddress: '',
-    paidBy: 'yes', payerName: '', refundReason: 'overpayment', reasonExplain: '',
-    payReceiptNumber: '', payDate: '', payAmount: '', payMethod: 'CityPay online', payLast4: '', payUnknown: false, notes: '',
+    entityName: view.respondent, phone: '', paidBy: 'yes', payerName: '',
+    payUnknown: false,
   });
   const [files, setFiles] = useState<Record<string, string>>(Object.fromEntries(view.docs.map((k) => [k, 'Uploaded'])));
   const [showHelp, setShowHelp] = useState(false);
@@ -196,77 +198,63 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
   return (
     <form onSubmit={submit} className="grid gap-6">
       <div className={card}>
-        <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 2 · Your details</h2>
-        <p className="mt-2 text-[14px] text-[#4a5550]">These go on the agency’s refund request. The agency mails the check to us, and we mail it on to you.</p>
+        <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 2 · Payment details</h2>
+        <p className="mt-2 text-[14px] text-[#4a5550]">
+          The agency needs proof of the original payment. The agency mails the check to us so we can verify the amount and
+          confirm payment before it reaches you. We will never cash your check.
+        </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <label className={`${label} sm:col-span-2`}>Owner / company name<input required className={input} value={f.entityName} onChange={set('entityName')} /></label>
-          <label className={label}>Contact name<input required className={input} value={f.contactName} onChange={set('contactName')} /></label>
-          <label className={label}>Title<input className={input} value={f.contactTitle} onChange={set('contactTitle')} /></label>
-          <label className={label}>Phone<input className={input} value={f.phone} onChange={set('phone')} /></label>
-          <label className={label}>Email<input required type="email" className={input} value={f.email} onChange={set('email')} /></label>
-          <label className={`${label} sm:col-span-2`}>Where should we mail your check?<textarea required rows={2} className={input} value={f.mailingAddress} onChange={set('mailingAddress')} /></label>
           <label className={label}>Who made the original payment?
             <select className={input} value={f.paidBy} onChange={set('paidBy')}>
               <option value="yes">The owner above</option><option value="no">Someone else (agent, contractor…)</option><option value="unsure">Not sure</option>
             </select>
           </label>
-          {f.paidBy !== 'yes' && <label className={label}>Who paid, if known<input className={input} value={f.payerName} onChange={set('payerName')} /></label>}
-          <label className={`${label} sm:col-span-2`}>Reason for the refund
-            <select className={input} value={f.refundReason} onChange={set('refundReason')}>
-              <option value="overpayment">Overpayment (paid more than the penalty)</option>
-              <option value="duplicate">Duplicate payment</option>
-              <option value="wrong_summons">Payment applied to the wrong summons</option>
-              <option value="dismissed">Summons was dismissed</option>
-              <option value="paid_in_error">Paid in error</option>
-              <option value="other">Other</option>
-            </select>
-          </label>
-          {['paid_in_error', 'other'].includes(f.refundReason) && <label className={`${label} sm:col-span-2`}>Explain<input className={input} value={f.reasonExplain} onChange={set('reasonExplain')} /></label>}
+          {f.paidBy !== 'yes'
+            ? <label className={label}>Who paid, if known<input className={input} value={f.payerName} onChange={set('payerName')} /></label>
+            : <label className={label}>Phone (optional)<input className={input} value={f.phone} onChange={set('phone')} /></label>}
         </div>
-        {f.paidBy !== 'yes' && (
-          <p className="mt-4 bg-[#fff6e8] p-3 text-[13px] text-[#6b4a1f]">
-            The agency refunds whoever made the original payment. If someone else paid, we’ll help you coordinate with them.
-          </p>
-        )}
-      </div>
 
-      <div className={card}>
-        <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Payment confirmation</h2>
-        <p className="mt-2 text-[14px] text-[#4a5550]">The agency requires proof of the original payment. Enter what you have and upload a copy.</p>
-        <button type="button" onClick={() => setShowHelp(!showHelp)} className="mt-3 text-[14px] font-medium text-[#a8703f] underline">
-          {showHelp ? 'Hide' : 'How do I find my payment confirmation?'}
-        </button>
-        {showHelp && <div className="mt-4 bg-[#fbf9f5] p-5"><FindPayment compact /></div>}
-        <fieldset disabled={f.payUnknown} className="mt-6 grid gap-4 disabled:opacity-50 sm:grid-cols-2">
-          <label className={label}>Receipt or confirmation number<input placeholder="e.g. CPY030570883" className={input} value={f.payReceiptNumber} onChange={set('payReceiptNumber')} /></label>
-          <label className={label}>Payment date<input type="date" className={input} value={f.payDate} onChange={set('payDate')} /></label>
-          <label className={label}>Amount paid<input placeholder="$" inputMode="decimal" className={input} value={f.payAmount} onChange={set('payAmount')} /></label>
-          <label className={label}>Paid by
-            <select className={input} value={f.payMethod} onChange={set('payMethod')}>
-              <option>CityPay online</option><option>Mailed check</option><option>In person</option><option>Bank transfer / ACH</option><option>Other</option>
-            </select>
-          </label>
-          <label className={label}>Last 4 digits of card or account<input inputMode="numeric" maxLength={4} className={input} value={f.payLast4} onChange={set('payLast4')} /></label>
-          <div className="sm:col-span-2">
-            <Upload kind="proof_of_payment" title="Upload payment confirmation" hint="CityPay receipt, cancelled check (front and back) or bank/card statement page." req />
+        <div className="mt-8 border-t border-[#e6e0d5] pt-6">
+          <h3 className="text-[18px] font-semibold text-[#13302a]">Upload proof of your payment</h3>
+          <p className="mt-1 text-[14px] text-[#4a5550]">One document is all we need. You don’t have to type anything in.</p>
+          <div className={f.payUnknown ? 'pointer-events-none opacity-50' : ''}>
+            <ol className="mt-5 grid gap-6">
+              <li>
+                <div className="text-[14px] font-semibold text-[#13302a]"><span className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-[#13302a] text-[12px] text-white">1</span>Find one of these</div>
+                <PaymentExamples />
+                <button type="button" onClick={() => setShowHelp(!showHelp)} className="mt-3 text-[14px] font-medium text-[#a8703f] underline">
+                  {showHelp ? 'Hide tips' : 'Not sure where to look? See tips'}
+                </button>
+                {showHelp && <div className="mt-3 bg-[#fbf9f5] p-5"><FindPayment compact /></div>}
+              </li>
+              <li>
+                <div className="text-[14px] font-semibold text-[#13302a]"><span className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-[#13302a] text-[12px] text-white">2</span>Check that it shows</div>
+                <ul className="mt-2 grid gap-1.5 bg-[#fbf9f5] p-4 text-[14px] text-[#4a5550]">
+                  <li>✓ The violation number{view.details?.summons?.[0] ? <> (<b className="text-[#13302a]">{view.details.summons[0]}</b>)</> : null} or “ECB”</li>
+                  <li>✓ The amount paid{view.details?.paid != null ? <> (<b className="text-[#13302a]">{usd(view.details.paid)}</b>)</> : null}, or a breakdown that adds up to it</li>
+                  <li>✓ The date it was paid</li>
+                </ul>
+                <p className="mt-2 text-[13px] text-[#6b6a64]">
+                  <b className="text-[#13302a]">Bank statement?</b> Black out everything unrelated first. We use it only to prove this
+                  one payment. We never sell or share your data, and we don’t pull anything else from it.
+                </p>
+              </li>
+              <li>
+                <div className="text-[14px] font-semibold text-[#13302a]"><span className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-[#13302a] text-[12px] text-white">3</span>Upload it</div>
+                <div className="mt-2">
+                  <Upload kind="proof_of_payment" title="Choose a file" hint="PDF or a phone photo. For a check, include the front and back." req />
+                </div>
+              </li>
+            </ol>
           </div>
-        </fieldset>
-        <label className="mt-4 flex items-start gap-2 text-[14px]">
-          <input type="checkbox" checked={f.payUnknown} onChange={(e) => setF({ ...f, payUnknown: e.target.checked })} className="mt-1 accent-[#13302a]" />
-          I can’t find it. Please request the payment record from the agency for me.
-        </label>
-      </div>
-
-      <div className={card}>
-        <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Documents</h2>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          <Upload kind="photo_id" title="Photo ID of the signer" hint="Driver’s license or passport." req />
-          <Upload kind="authority" title="Proof of authority (optional)" hint="Shows you can act for the company, e.g. operating agreement page." />
-          <Upload kind="other" title="Anything else (optional)" hint="Decisions, letters or notices." />
+          <label className="mt-5 flex items-start gap-2 text-[14px]">
+            <input type="checkbox" checked={f.payUnknown} onChange={(e) => setF({ ...f, payUnknown: e.target.checked })} className="mt-1 accent-[#13302a]" />
+            I can’t find any of these. Please request the payment record from the agency for me.
+          </label>
         </div>
-        <label className={`${label} mt-5 block`}>Notes for us<textarea rows={2} className={input} value={f.notes} onChange={set('notes')} /></label>
         {err && <p className="mt-4 text-[14px] text-red-700">{err}</p>}
-        <button disabled={busy} className={`mt-6 ${btn}`}>{busy ? 'Saving…' : 'Continue to review'}</button>
+        <button disabled={busy} className={`mt-6 ${btn}`}>{busy ? 'Saving…' : 'Continue to step 3'}</button>
       </div>
     </form>
   );
@@ -286,7 +274,7 @@ function RefundRequestStep({ code, zip, agency, onDone }: { code: string; zip: s
 
   return (
     <div className={card}>
-      <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 3 · Review and sign the refund request</h2>
+      <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 3 · Sign the refund request</h2>
       <p className="mt-2 text-[14px] text-[#4a5550]">
         We’ve filled in {agency}’s official refund request from your details. Check it, then sign. We’ll file it with your documents.
       </p>
@@ -305,7 +293,7 @@ function RefundRequestStep({ code, zip, agency, onDone }: { code: string; zip: s
   );
 }
 
-function Track({ view, code, zip }: { view: View; code: string; zip: string }) {
+function Track({ view, code, zip, onDone }: { view: View; code: string; zip: string; onDone: (v: View) => void }) {
   const filed = ['filed', 'paid', 'closed'].includes(view.status);
   const paid = ['paid', 'closed'].includes(view.status);
   const items = [
@@ -318,6 +306,7 @@ function Track({ view, code, zip }: { view: View; code: string; zip: string }) {
   ];
   return (
     <>
+    {paid && !view.hasForwardAddress && <ForwardAddress view={view} code={code} zip={zip} onDone={onDone} />}
     {!filed && (
       <div className="border border-[#ecdcb8] bg-[#fbf6e9] p-6 sm:p-8">
         <h2 className="text-[22px] font-medium text-[#13302a]">Here’s what’s next</h2>
@@ -354,5 +343,43 @@ function Track({ view, code, zip }: { view: View; code: string; zip: string }) {
       </a>
     </div>
     </>
+  );
+}
+
+function ForwardAddress({ view, code, zip, onDone }: { view: View; code: string; zip: string; onDone: (v: View) => void }) {
+  const onFile = view.respondentAddress || '';
+  const [choice, setChoice] = useState(onFile ? 'file' : 'other');
+  const [name, setName] = useState(view.respondent);
+  const [other, setOther] = useState('');
+  const [err, setErr] = useState(''); const [busy, setBusy] = useState(false);
+  async function save(e: React.FormEvent) {
+    e.preventDefault(); setBusy(true); setErr('');
+    const street = choice === 'file' ? onFile : other;
+    const r = await post(`/api/claim/${code}/forward-address`, { address: `${name.trim()}\n${street.trim()}`, zip });
+    const j = await r.json(); setBusy(false);
+    r.ok ? onDone(j) : setErr(j.error);
+  }
+  const radio = 'flex cursor-pointer items-start gap-3 border p-4 text-[14px]';
+  return (
+    <form onSubmit={save} className="border-2 border-[#a8703f] bg-white p-6 sm:p-8">
+      <h2 className="text-[22px] font-medium text-[#13302a]">Good news: your check has arrived</h2>
+      <p className="mt-2 text-[14px] text-[#4a5550]">We’ve verified it. Where should we mail it? We’ll send it uncashed by tracked mail within 5 business days.</p>
+      <label className={`${label} mt-5`}>Name on the envelope<input required className={input} value={name} onChange={(e) => setName(e.target.value)} /></label>
+      <div className="mt-4 grid gap-3">
+        {onFile && (
+          <label className={`${radio} ${choice === 'file' ? 'border-[#a8703f] bg-[#fbf9f5]' : 'border-[#ddd5c7]'}`}>
+            <input type="radio" name="addr" checked={choice === 'file'} onChange={() => setChoice('file')} className="mt-1 accent-[#13302a]" />
+            <span><span className="block font-medium text-[#13302a]">Address on file</span>{onFile}</span>
+          </label>
+        )}
+        <label className={`${radio} ${choice === 'other' ? 'border-[#a8703f] bg-[#fbf9f5]' : 'border-[#ddd5c7]'}`}>
+          <input type="radio" name="addr" checked={choice === 'other'} onChange={() => setChoice('other')} className="mt-1 accent-[#13302a]" />
+          <span className="block font-medium text-[#13302a]">A different address</span>
+        </label>
+        {choice === 'other' && <AddressLookup value={other} onChange={setOther} className={input} />}
+      </div>
+      {err && <p className="mt-3 text-[14px] text-red-700">{err}</p>}
+      <button disabled={busy} className={`mt-5 ${btn}`}>{busy ? 'Saving…' : 'Mail my check here'}</button>
+    </form>
   );
 }

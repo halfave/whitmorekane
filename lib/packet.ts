@@ -20,7 +20,7 @@ export async function ppu1ForClaim(claimId: string) {
     // The agency mails the check to us; we verify it and forward it to the owner (agreement §4).
     mailingAddress: process.env.FIRM_MAILING_ADDRESS
       ? `c/o Whitmore Kane & Associates, ${process.env.FIRM_MAILING_ADDRESS}`
-      : info.mailing_address,
+      : info.mailing_address || '',
     respondent: c.respondent_name,
     summons: c.violation_number || (c.summons_numbers || []).join(', '),
     reason: info.refund_reason,

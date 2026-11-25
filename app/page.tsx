@@ -136,7 +136,7 @@ const FAQ = [
   { q: 'What does it cost?', a: '15% of what’s recovered. You owe it only if money comes back, and we invoice you after you receive your check. Nothing upfront.' },
   { q: 'Why doesn’t the letter name the agency?', a: 'Finding the money is the work we do. Once you sign, the agency, record number and property appear in your portal right away.' },
   { q: 'How do I get paid?', a: 'As your agent, we receive the agency’s check. We never cash or deposit it: we verify it and mail it to you uncashed, then invoice our fee after you receive it.' },
-  { q: 'What will you need from me?', a: 'An electronic signature, a photo ID for the signer and a few details about the original payment. We never ask for a Social Security number.' },
+  { q: 'What will you need from me?', a: 'An electronic signature and a few details about the original payment. We never ask for a Social Security number.' },
   { q: 'How long does it take?', a: 'Your part takes about ten minutes. The agency then takes several weeks to process the refund.' },
   { q: 'Can I cancel?', a: 'Yes, at no cost, any time before we file your refund request with the agency. After we file, it can’t be cancelled.' },
 ];

@@ -11,11 +11,9 @@ export default function Privacy() {
         ['Information we collect', <>
           <p>When you look up a claim, you give us the claim code and ZIP code from your letter. If you continue with a claim, we collect:</p>
           <ul>
-            <li>Your name, title, company name, email address, phone number and mailing address</li>
+            <li>Your name, title, company name, email address and phone number, and later the address where you want your check mailed</li>
             <li>Your electronic signature</li>
-            <li>A copy of your photo ID</li>
             <li>Details and records of the original payment, such as receipts or bank or card statement pages</li>
-            <li>Any other documents or notes you choose to send us</li>
           </ul>
           <p>When you sign a document, we also record your IP address, your browser and the date and time, so we can verify the signature. Our hosting provider keeps standard server logs.</p>
         </>],
@@ -23,7 +21,7 @@ export default function Privacy() {
           <p>We use your information only to handle your claim and run our business:</p>
           <ul>
             <li>To prepare, sign and submit refund paperwork to the agency holding your money</li>
-            <li>To verify your identity and authority to act for a company</li>
+            <li>To verify your signature and authority to act for a company</li>
             <li>To communicate with you and the agency about your claim</li>
             <li>To mail your check and send our invoice</li>
             <li>To keep records required by law and resolve disputes</li>
