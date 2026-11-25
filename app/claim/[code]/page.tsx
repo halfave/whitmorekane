@@ -40,11 +40,8 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
   return (
     <div className="font-[family-name:var(--font-display)]">
       <section className="bg-[#f4efe6]">
-        <div className="mx-auto max-w-3xl px-4 py-12 text-center">
-          <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#a8703f]">Claim {code}</div>
-          <h1 className="mt-3 text-[30px] font-medium uppercase leading-tight text-[#13302a] sm:text-[36px]">
-            {step === 4 ? 'Your claim is in progress' : 'Your money is waiting'}
-          </h1>
+        <div className="mx-auto max-w-3xl px-4 py-8 text-center">
+          {step === 4 && <h1 className="text-[30px] font-medium uppercase leading-tight text-[#13302a] sm:text-[36px]">Your claim is in progress</h1>}
           {view && <Steps step={step} />}
         </div>
       </section>
@@ -94,7 +91,9 @@ function Summary({ view }: { view: View }) {
   return (
     <div className={`${card} grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center`}>
       <div>
-        <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#6b756f]">Claimant</div>
+        <div className="flex flex-wrap justify-between gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#6b756f]">
+          <span>Claimant</span><span className="text-[#a8703f]">Claim {view.code}</span>
+        </div>
         <div className="mt-1 text-[18px] font-medium text-[#13302a]">{view.respondent}</div>
         <p className="mt-2 text-[14px] text-[#4a5550]">Held by {view.agency}.</p>
         {view.details ? (
