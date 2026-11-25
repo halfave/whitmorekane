@@ -112,8 +112,8 @@ function Summary({ view }: { view: View }) {
         <div className="mt-1 text-[36px] font-medium leading-none text-[#13302a]">{usd(view.amount)}</div>
       </div>
       <p className="bg-[#f4efe6] p-3 text-[12px] leading-relaxed text-[#4a5550] sm:col-span-2">
-        You can contact the holding agency yourself at no cost. {FIRM} handles the paperwork, the agency and any issues that come
-        up for {view.feePct}% of what we recover. You don’t pay unless we recover your funds.
+        {FIRM} handles the paperwork, the agency and any issues that come up for {view.feePct}% of what we recover. You don’t pay
+        unless we recover your funds.
       </p>
     </div>
   );
