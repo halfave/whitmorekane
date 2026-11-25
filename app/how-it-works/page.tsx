@@ -8,7 +8,7 @@ const STEPS = [
   { t: 'Add your details and documents', time: '5 minutes', d: 'Tell us where to send your check, upload a photo ID and answer a few questions about the original payment. We walk you through it.' },
   { t: 'Sign the refund request', time: '2 minutes', d: 'We prepare the agency’s official paperwork from your details. Review it and sign electronically.' },
   { t: 'We handle the agency', time: 'Several weeks', d: 'We file everything, answer the agency’s questions and deal with any issues that come up. You can check progress any time on the Claim status page.' },
-  { t: 'You get your check', time: 'When the agency pays', d: 'The agency mails the check to us. We verify everything is correct and mail it on to you, then send our invoice for 15%.' },
+  { t: 'You get your check', time: 'When the agency pays', d: 'The agency mails the check to us as your agent. We never cash it: we verify it and mail it to you uncashed. After you receive it, we invoice 15%.' },
 ];
 
 const NEED = [

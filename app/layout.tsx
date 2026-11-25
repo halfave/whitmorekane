@@ -55,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <div className="border-t border-[#e6e0d5]">
             <div className="mx-auto flex max-w-[1170px] flex-col gap-2 px-[15px] py-4 text-[12px] text-[#6b756f] sm:flex-row sm:items-center sm:justify-between">
-              <p>Copyright {new Date().getFullYear()} Whitmore Kane &amp; Associates. All rights reserved.</p>
+              <p>Copyright {new Date().getFullYear()} Whitmore Kane &amp; Associates. All rights reserved. Not a law firm. Not affiliated with the City of New York.</p>
               <nav className="flex flex-wrap gap-x-4 gap-y-1">
                 <Link href="/privacy" className="hover:text-[#13302a]">Privacy Policy</Link>
                 <PrivacyPreferencesLink />

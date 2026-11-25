@@ -105,3 +105,6 @@ from claims c left join payments p on p.claim_id = c.id
 group by c.id;
 revoke all on claim_ledger from anon, authenticated;
 grant select on claim_ledger to service_role;
+
+-- Not callable through the public API.
+revoke execute on function public.rls_auto_enable() from anon, authenticated, public;

@@ -147,8 +147,8 @@ function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; 
       </div>
       <label className="mt-4 flex items-start gap-2 text-[14px]">
         <input type="checkbox" checked={f.accept} onChange={(e) => setF({ ...f, accept: e.target.checked })} className="mt-1 accent-[#13302a]" />
-        I am authorized to act for {view.respondent}. I agree to the terms above, including that this agreement can’t be
-        cancelled once signed, and to sign electronically.
+        I am authorized to act for {view.respondent}. I agree to the terms above, including that I can cancel only until the
+        refund request is filed, and to sign electronically.
       </label>
       {err && <p className="mt-3 text-[14px] text-red-700">{err}</p>}
       <button disabled={busy || !f.accept} className={`mt-6 ${btn}`}>{busy ? 'Signing…' : 'Sign and continue'}</button>
@@ -316,9 +316,27 @@ function Track({ view, code, zip }: { view: View; code: string; zip: string }) {
     { t: `Filed with ${view.agency}`, done: filed, d: filed ? (view.filedAt ? new Date(view.filedAt).toLocaleDateString() : '') : 'We file within 2 business days.' },
     { t: 'Agency review', done: paid, d: paid ? '' : 'Agencies typically take several weeks. We handle any questions or issues that come up.' },
     { t: 'Check received and verified', done: paid, d: paid ? '' : 'The agency mails the check to us and we confirm it’s correct.' },
-    { t: 'Check mailed to you', done: view.status === 'closed', d: view.status === 'closed' ? '' : 'Sent by tracked mail within 5 business days, with our invoice.' },
+    { t: 'Check mailed to you', done: view.status === 'closed', d: view.status === 'closed' ? '' : 'Sent uncashed by tracked mail within 5 business days. We invoice after you receive it.' },
   ];
   return (
+    <>
+    {!filed && (
+      <div className="border border-[#ecdcb8] bg-[#fbf6e9] p-6 sm:p-8">
+        <h2 className="text-[22px] font-medium text-[#13302a]">Here’s what’s next</h2>
+        <ul className="mt-4 grid gap-2 text-[15px] text-[#2b3631] [&>li]:ml-5 [&>li]:list-[square] [&>li]:marker:text-[#a8703f]">
+          <li>We’ll file your refund request with {view.agency} within <b>2 business days</b>. You can cancel free until then.</li>
+          <li>The agency reviews it. This usually takes <b>several weeks to a few months</b>. If it asks for anything, we’ll handle it and email you only if we need you.</li>
+          <li>The agency mails the check to us as your agent. We never cash it.</li>
+          <li>We mail it to you uncashed by tracked mail within <b>5 business days</b>. After you receive it, we invoice our 15% fee.</li>
+        </ul>
+      </div>
+    )}
+    <div className="flex items-start gap-3">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#13302a] text-[14px] font-semibold text-white">SW</span>
+      <div className="bg-[#eef4f2] px-4 py-3 text-[14px] text-[#2b3631]">
+        Hi, I’m Susan. Email me at <a className="text-[#a8703f] underline" href={`mailto:claims@whitmorekane.com?subject=Claim%20${code}`}>claims@whitmorekane.com</a> if you need any help!
+      </div>
+    </div>
     <div className={card}>
       <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Status</h2>
       <ol className="mt-6 grid gap-0">
@@ -337,5 +355,6 @@ function Track({ view, code, zip }: { view: View; code: string; zip: string }) {
         Download your signed refund request
       </a>
     </div>
+    </>
   );
 }
