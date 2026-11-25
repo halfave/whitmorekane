@@ -108,3 +108,18 @@ grant select on claim_ledger to service_role;
 
 -- Not callable through the public API.
 revoke execute on function public.rls_auto_enable() from anon, authenticated, public;
+
+-- 2026-11-25: refund tracker (/sushi). Claim codes only when requested; tracked rows start as 'found'.
+alter table public.claims alter column claim_code drop not null;
+alter table public.claims alter column amount drop not null;
+alter table public.claims
+  add column if not exists violation_date date,
+  add column if not exists refund_reason text,
+  add column if not exists filed_by text,
+  add column if not exists check_issued_on date,
+  add column if not exists check_number text,
+  add column if not exists check_amount numeric,
+  add column if not exists check_received_on date,
+  add column if not exists check_forwarded_on date;
+alter table public.claims drop constraint claims_status_check;
+alter table public.claims add constraint claims_status_check check (status = any (array['found','sent','viewed','signed','info_submitted','filed','paid','closed','declined']));

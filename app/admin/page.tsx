@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { admin } from '@/lib/server';
-import { requireAdmin, newClaimCode, clearAdminCookie } from '@/lib/admin';
+import { requireAdmin, clearAdminCookie } from '@/lib/admin';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { robots: { index: false } };
@@ -17,7 +17,7 @@ async function createClaim(f: FormData) {
   const num = (k: string) => (g(k) ? Number(g(k).replace(/[$,]/g, '')) : null);
   const violation = g('violation_number').toUpperCase();
   const { data, error } = await admin.from('claims').insert({
-    claim_code: newClaimCode(),
+    claim_code: null,
     violation_number: violation,
     summons_numbers: [violation],
     respondent_name: g('respondent_name'),
@@ -85,7 +85,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
                 <tr key={c.id} className="border-t border-[#e3e0d8]">
                   <td className="p-3"><Link className="underline" href={`/admin/claims/${c.id}`}>{c.violation_number || c.summons_numbers?.join(', ')}</Link></td>
                   <td className="p-3">{c.respondent_name}</td>
-                  <td className="p-3 font-mono">{c.claim_code}</td>
+                  <td className="p-3 font-mono">{c.claim_code || '—'}</td>
                   <td className="p-3 text-right">{usd(c.amount)}</td>
                   <td className="p-3">{c.status.replace('_', ' ')}</td>
                   <td className="p-3 text-right">{usd(l.refunded)}</td>

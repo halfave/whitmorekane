@@ -61,7 +61,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <PrivacyPreferencesLink />
                 <Link href="/terms" className="hover:text-[#13302a]">Terms &amp; Conditions</Link>
                 <Link href="/accessibility" className="hover:text-[#13302a]">Accessibility</Link>
-                <Link href="/sitemap" className="hover:text-[#13302a]">Site Map</Link>
               </nav>
             </div>
           </div>

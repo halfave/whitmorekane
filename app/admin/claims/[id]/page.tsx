@@ -10,7 +10,7 @@ export const metadata = { robots: { index: false } };
 const usd = (n: any) => Number(n || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 const inp = 'mt-1 w-full rounded border border-[#cfcac0] px-2 py-1.5 text-sm';
 const card = 'rounded-lg border border-[#e3e0d8] bg-white p-5';
-const STATUSES = ['sent', 'viewed', 'signed', 'info_submitted', 'filed', 'paid', 'closed', 'declined'];
+const STATUSES = ['found', 'sent', 'viewed', 'signed', 'info_submitted', 'filed', 'paid', 'closed', 'declined'];
 const KINDS: Record<string, string> = {
   refund_received: 'Refund received by owner',
   offset_applied: 'Credit offset by agency',
@@ -95,7 +95,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
       <div className={card}>
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h1 className="text-2xl font-medium uppercase text-[#13302a]">{c.violation_number || c.summons_numbers?.join(', ')}</h1>
-          <div className="font-mono text-sm">Code {c.claim_code}{c.respondent_zip ? ` · ZIP ${c.respondent_zip}` : ''}</div>
+          <div className="font-mono text-sm">Code {c.claim_code || '— (not generated)'}{c.respondent_zip ? ` · ZIP ${c.respondent_zip}` : ''}</div>
         </div>
         <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
           <div><dt className="inline text-[#6b7480]">Owner: </dt><dd className="inline">{c.respondent_name}</dd></div>
@@ -115,7 +115,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
             </a>
             {c.refund_request_signed_at && (
               <a className="rounded border border-[#13302a] px-3 py-1.5"
-                href={`mailto:penaltyprocessing@oath.nyc.gov?cc=ClerksOffice@oath.nyc.gov&subject=${encodeURIComponent(`Refund Request – ${c.respondent_name} – Summons ${c.violation_number}`)}&body=${encodeURIComponent(`Dear Penalty Processing Unit,\n\nOn behalf of respondent ${c.respondent_name}, attached is a signed refund request (PPU1) for summons ${c.violation_number}, with proof of payment and the signer's ID.\n\nPenalty imposed: ${usd(c.penalty_imposed)}\nAmount paid: ${usd(c.amount_paid)}\nCredit requested: ${usd(c.amount)}\n\nThank you,\nWhitmore Kane\nclaims@whitmorekane.com`)}`}>
+                href={`mailto:penaltyprocessing@oath.nyc.gov?cc=ClerksOffice@oath.nyc.gov&subject=${encodeURIComponent(`Refund Request – ${c.respondent_name} – Summons ${c.violation_number}`)}&body=${encodeURIComponent(`Dear Penalty Processing Unit,\n\nOn behalf of respondent ${c.respondent_name}, attached is a signed refund request (PPU1) for summons ${c.violation_number}, with proof of payment.\n\nPenalty imposed: ${usd(c.penalty_imposed)}\nAmount paid: ${usd(c.amount_paid)}\nCredit requested: ${usd(c.amount)}\n\nThank you,\nWhitmore Kane\nclaims@whitmorekane.com`)}`}>
                 Draft email to OATH
               </a>
             )}
