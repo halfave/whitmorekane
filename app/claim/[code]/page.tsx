@@ -102,6 +102,12 @@ function Summary({ view }: { view: View }) {
           <dl className="mt-3 grid gap-1 text-[14px]">
             <div><dt className="inline text-[#6b756f]">Record number: </dt><dd className="inline font-medium">{view.details.summons.join(', ')}</dd></div>
             {view.details.property && <div><dt className="inline text-[#6b756f]">Property: </dt><dd className="inline">{view.details.property}</dd></div>}
+            {view.details.paid != null && view.details.penalty != null && (
+              <div className="mt-1">
+                You paid <b>{usd(view.details.paid)}</b>. The penalty was <b>{usd(view.details.penalty)}</b>, so you’re owed{' '}
+                <b>{usd(view.amount)}</b> back.
+              </div>
+            )}
           </dl>
         ) : (
           <p className="mt-2 text-[13px] text-[#6b756f]">The agency, record number and property appear here once you sign.</p>
