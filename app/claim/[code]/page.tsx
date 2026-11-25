@@ -72,7 +72,7 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
 }
 
 function Steps({ step }: { step: number }) {
-  const s = ['Sign the agreement', 'Payment details', 'Sign the refund request'];
+  const s = ['Sign the agreement', 'Upload your old receipt', 'Sign the refund request'];
   return (
     <ol className="mx-auto mt-8 grid max-w-2xl grid-cols-3 gap-3 text-left">
       {s.map((l, i) => {
@@ -197,9 +197,9 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
   return (
     <form onSubmit={submit} className="grid gap-6">
       <div className={card}>
-        <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 2 · Payment details</h2>
+        <h2 className="text-[22px] font-medium uppercase text-[#13302a]">Step 2 · Upload your old receipt</h2>
         <p className="mt-2 text-[14px] text-[#4a5550]">
-          The agency needs proof of the original payment. The agency mails the check to us so we can verify the amount and
+          Nothing to pay here. To release your refund, the agency needs proof of the payment you already made. The agency mails the check to us so we can verify the amount and
           confirm payment before it reaches you. We will never cash your check.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -215,7 +215,7 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
         </div>
 
         <div className="mt-8 border-t border-[#e6e0d5] pt-6">
-          <h3 className="text-[18px] font-semibold text-[#13302a]">Upload proof of your payment</h3>
+          <h3 className="text-[18px] font-semibold text-[#13302a]">Proof of the payment you already made</h3>
           <p className="mt-1 text-[14px] text-[#4a5550]">One document is all we need. You don’t have to type anything in.</p>
           <div className={f.payUnknown ? 'pointer-events-none opacity-50' : ''}>
             <ol className="mt-5 grid gap-6">

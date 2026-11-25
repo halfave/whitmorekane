@@ -5,7 +5,7 @@ export const metadata = { title: 'How it works | Whitmore Kane & Associates' };
 const STEPS = [
   { t: 'Look up your claim', time: '1 minute', d: 'Enter the claim code and ZIP code from your letter. You’ll see how much a New York City agency is holding for you.' },
   { t: 'Sign the authorization', time: '2 minutes', d: 'Read our short agreement and sign with your mouse or finger. Once you sign, we show you the agency and the record your money is tied to.' },
-  { t: 'Add payment details', time: '5 minutes', d: 'Answer a few questions about the original payment and upload a confirmation if you have one. We walk you through it.' },
+  { t: 'Upload your old receipt', time: '5 minutes', d: 'Upload proof of the payment you already made, like a receipt or statement page. We walk you through it.' },
   { t: 'Sign the refund request', time: '2 minutes', d: 'We prepare the agency’s official paperwork from your details. Review it and sign electronically.' },
   { t: 'We handle the agency', time: 'Several weeks', d: 'We file everything, answer the agency’s questions and deal with any issues that come up. You can check progress any time on the Claim status page.' },
   { t: 'You get your check', time: 'When the agency pays', d: 'The agency mails the check to us as your agent. We never cash it: we verify it and mail it to you uncashed. After you receive it, we invoice 15%.' },
@@ -13,7 +13,7 @@ const STEPS = [
 
 const NEED = [
   ['Your claim code and ZIP', 'Printed at the top of your letter.'],
-  ['A few payment details', 'We’ll show you exactly what we need and where to find it.'],
+  ['Proof of your original payment', 'We’ll show you exactly what we need and where to find it.'],
 ];
 
 const WHY = [
