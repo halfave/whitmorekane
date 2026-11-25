@@ -123,3 +123,5 @@ alter table public.claims
   add column if not exists check_forwarded_on date;
 alter table public.claims drop constraint claims_status_check;
 alter table public.claims add constraint claims_status_check check (status = any (array['found','sent','viewed','signed','info_submitted','filed','paid','closed','declined']));
+alter table public.documents drop constraint documents_kind_check;
+alter table public.documents add constraint documents_kind_check check (kind = any (array['photo_id','proof_of_payment','authority','other','ppu1','refund_check','agency_letter']));
