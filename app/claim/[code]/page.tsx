@@ -164,7 +164,7 @@ function AuthorizeStep({ view, code, zip, onDone }: { view: View; code: string; 
 
 function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zip: string; onDone: (v: View) => void }) {
   const [f, setF] = useState({
-    entityName: view.respondent, phone: '', paidBy: 'yes', payerName: '',
+    entityName: view.respondent, paidBy: 'yes', payerName: '',
     payUnknown: false,
   });
   const [files, setFiles] = useState<Record<string, string>>(Object.fromEntries(view.docs.map((k) => [k, 'Uploaded'])));
@@ -215,9 +215,7 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
               <option value="yes">The owner above</option><option value="no">Someone else (agent, contractor…)</option><option value="unsure">Not sure</option>
             </select>
           </label>
-          {f.paidBy !== 'yes'
-            ? <label className={label}>Who paid, if known<input className={input} value={f.payerName} onChange={set('payerName')} /></label>
-            : <label className={label}>Phone (optional)<input className={input} value={f.phone} onChange={set('phone')} /></label>}
+          {f.paidBy !== 'yes' && <label className={label}>Who paid, if known<input className={input} value={f.payerName} onChange={set('payerName')} /></label>}
         </div>
 
         <div className="mt-8 border-t border-[#e6e0d5] pt-6">
