@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'How it works | Whitmore Kane & Associates' };
+export const metadata = { title: 'How it works | Whitmore Kane' };
 
 const STEPS = [
   { t: 'Look up your claim', time: '1 minute', d: 'Enter the claim code and ZIP code from your letter. You’ll see how much a New York City agency is holding for you.' },

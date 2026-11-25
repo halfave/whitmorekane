@@ -24,7 +24,7 @@ export default function LegalPage({ title, intro, sections }: { title: string; i
 
 export const CONTACT = (
   <p>
-    Whitmore Kane &amp; Associates (a trade name of Half Ave Company LLC), New York, NY.{' '}
+    Whitmore Kane (a trade name of Half Ave Company LLC), New York, NY.{' '}
     <a href="mailto:claims@whitmorekane.com">claims@whitmorekane.com</a>
   </p>
 );

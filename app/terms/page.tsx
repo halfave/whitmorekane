@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import LegalPage, { CONTACT } from '@/components/LegalPage';
 
-export const metadata = { title: 'Terms & Conditions | Whitmore Kane & Associates' };
+export const metadata = { title: 'Terms & Conditions | Whitmore Kane' };
 
 export default function Terms() {
   return (
@@ -10,7 +10,7 @@ export default function Terms() {
       intro="These terms govern your use of whitmorekane.com and our claims portal."
       sections={[
         ['Agreement to terms', <p>By using this website, you agree to these terms. If you don’t agree, please don’t use the site.</p>],
-        ['Services', <p>Whitmore Kane &amp; Associates, a trade name of Half Ave Company LLC, helps people and businesses recover money held by New York City agencies. Our work on any specific claim, including our fee, is governed by the authorization and fee agreement you sign in the portal. If that agreement conflicts with these terms, the agreement controls.</p>],
+        ['Services', <p>Whitmore Kane, a trade name of Half Ave Company LLC, helps people and businesses recover money held by New York City agencies. Our work on any specific claim, including our fee, is governed by the authorization and fee agreement you sign in the portal. If that agreement conflicts with these terms, the agreement controls.</p>],
         ['Text messages', <p>We don’t currently send text messages. See our <Link href="/privacy">Privacy Policy</Link> for how we would ask for consent if that changes.</p>],
         ['User responsibilities', <>
           <ul>

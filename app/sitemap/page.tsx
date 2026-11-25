@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Site Map | Whitmore Kane & Associates' };
+export const metadata = { title: 'Site Map | Whitmore Kane' };
 
 const PAGES: [string, string][] = [
   ['Home', '/'],

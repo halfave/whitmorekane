@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-white font-[family-name:var(--font-display)] text-[14px] leading-[1.45] text-[#333] antialiased">
         <header className="sticky top-0 z-30 bg-gradient-to-r from-[#0c1f1b] to-[#14332c] text-white">
           <div className="mx-auto flex h-[74px] max-w-[1170px] items-center justify-between gap-4 px-[15px]">
-            <Link href="/" aria-label="Whitmore Kane & Associates home"><Logo /></Link>
+            <Link href="/" aria-label="Whitmore Kane home"><Logo /></Link>
             <nav className="hidden items-center gap-7 text-[13px] font-medium md:flex">
               {NAV.map(([l, h]) => <Link key={h} href={h} className="text-white/90 hover:text-[#e0b083]">{l}</Link>)}
             </nav>
@@ -55,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <div className="border-t border-[#e6e0d5]">
             <div className="mx-auto flex max-w-[1170px] flex-col gap-2 px-[15px] py-4 text-[12px] text-[#6b756f] sm:flex-row sm:items-center sm:justify-between">
-              <p>Copyright {new Date().getFullYear()} Whitmore Kane &amp; Associates. All rights reserved. Not a law firm. Not affiliated with the City of New York.</p>
+              <p>Copyright {new Date().getFullYear()} Whitmore Kane. All rights reserved. Not a law firm. Not affiliated with the City of New York.</p>
               <nav className="flex flex-wrap gap-x-4 gap-y-1">
                 <Link href="/privacy" className="hover:text-[#13302a]">Privacy Policy</Link>
                 <PrivacyPreferencesLink />

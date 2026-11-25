@@ -1,6 +1,6 @@
-export const FIRM = 'Whitmore Kane & Associates';
-export const FIRM_LEGAL = 'Half Ave Company LLC, d/b/a Whitmore Kane & Associates';
-export const AGREEMENT_VERSION = '2026-11-24d';
+export const FIRM = 'Whitmore Kane';
+export const FIRM_LEGAL = 'Half Ave Company LLC, d/b/a Whitmore Kane';
+export const AGREEMENT_VERSION = '2026-11-24e';
 
 export function agreementText(p: { respondent: string; amount: number; feePct: number }) {
   const amt = p.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });

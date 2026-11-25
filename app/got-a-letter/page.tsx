@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ClaimForm from '@/components/ClaimForm';
 
-export const metadata = { title: 'Got a letter? | Whitmore Kane & Associates' };
+export const metadata = { title: 'Got a letter? | Whitmore Kane' };
 
 export default function GotALetter() {
   return (

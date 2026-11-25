@@ -1,6 +1,6 @@
 import LegalPage, { CONTACT } from '@/components/LegalPage';
 
-export const metadata = { title: 'Accessibility | Whitmore Kane & Associates' };
+export const metadata = { title: 'Accessibility | Whitmore Kane' };
 
 export default function Accessibility() {
   return (

@@ -37,7 +37,7 @@ export default function Home() {
           <Image src={u(IMG.desk, 1200)} alt="A desk with a notebook, pen and coffee" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
         </div>
         <div>
-          <div className={`${eyebrow} text-[#13302a]`}>About Whitmore Kane &amp; Associates</div>
+          <div className={`${eyebrow} text-[#13302a]`}>About Whitmore Kane</div>
           <h2 className={h2}>Recovery specialists working for you</h2>
           <p className="mt-4 text-[#4a5550]">
             New York City agencies hold money that belongs to people and businesses, and most never find out about it.
@@ -131,6 +131,7 @@ export default function Home() {
 }
 
 const FAQ = [
+  { q: 'Is this a scam?', a: 'No. We never ask for money upfront, a Social Security number or bank login. You pay nothing unless your money comes back, and we never cash your check: it reaches you uncashed. Once you sign, we show you the agency and record number, so you can check the claim with the agency yourself. Whitmore Kane is a trade name of Half Ave Company LLC, a New York company.' },
   { q: 'Where does the money come from?', a: 'A New York City agency is holding money that belongs to you or your company. Once you sign, we show you which agency and the record number.' },
   { q: 'Can I claim it myself?', a: 'Yes, you can contact the agency directly at no cost. People who try often get stuck: tracking down years-old payment records, sorting out who the original payer was, or finding the money applied to another balance. We’ve handled these before and know how to resolve them.' },
   { q: 'What does it cost?', a: '15% of what’s recovered. You owe it only if money comes back, and we invoice you after you receive your check. Nothing upfront.' },

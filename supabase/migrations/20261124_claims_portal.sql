@@ -1,4 +1,4 @@
--- Whitmore Kane & Associates claims portal.
+-- Whitmore Kane claims portal.
 -- All access goes through server routes using the service role.
 -- RLS is on with no policies, so the anon key cannot read or write these tables.
 

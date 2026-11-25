@@ -115,7 +115,7 @@ export default async function ClaimAdmin({ params }: { params: Promise<{ id: str
             </a>
             {c.refund_request_signed_at && (
               <a className="rounded border border-[#13302a] px-3 py-1.5"
-                href={`mailto:penaltyprocessing@oath.nyc.gov?cc=ClerksOffice@oath.nyc.gov&subject=${encodeURIComponent(`Refund Request – ${c.respondent_name} – Summons ${c.violation_number}`)}&body=${encodeURIComponent(`Dear Penalty Processing Unit,\n\nOn behalf of respondent ${c.respondent_name}, attached is a signed refund request (PPU1) for summons ${c.violation_number}, with proof of payment and the signer's ID.\n\nPenalty imposed: ${usd(c.penalty_imposed)}\nAmount paid: ${usd(c.amount_paid)}\nCredit requested: ${usd(c.amount)}\n\nThank you,\nWhitmore Kane & Associates\nclaims@whitmorekane.com`)}`}>
+                href={`mailto:penaltyprocessing@oath.nyc.gov?cc=ClerksOffice@oath.nyc.gov&subject=${encodeURIComponent(`Refund Request – ${c.respondent_name} – Summons ${c.violation_number}`)}&body=${encodeURIComponent(`Dear Penalty Processing Unit,\n\nOn behalf of respondent ${c.respondent_name}, attached is a signed refund request (PPU1) for summons ${c.violation_number}, with proof of payment and the signer's ID.\n\nPenalty imposed: ${usd(c.penalty_imposed)}\nAmount paid: ${usd(c.amount_paid)}\nCredit requested: ${usd(c.amount)}\n\nThank you,\nWhitmore Kane\nclaims@whitmorekane.com`)}`}>
                 Draft email to OATH
               </a>
             )}

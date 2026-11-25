@@ -1,6 +1,6 @@
 import ClaimForm from '@/components/ClaimForm';
 
-export const metadata = { title: 'Claim status | Whitmore Kane & Associates' };
+export const metadata = { title: 'Claim status | Whitmore Kane' };
 
 export default function Status() {
   return (

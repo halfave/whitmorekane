@@ -1,12 +1,12 @@
 import LegalPage, { CONTACT } from '@/components/LegalPage';
 
-export const metadata = { title: 'Privacy Policy | Whitmore Kane & Associates' };
+export const metadata = { title: 'Privacy Policy | Whitmore Kane' };
 
 export default function Privacy() {
   return (
     <LegalPage
       title="Privacy Policy"
-      intro="This policy explains what information Whitmore Kane & Associates collects through this website and claims portal, how we use it, and the choices you have."
+      intro="This policy explains what information Whitmore Kane collects through this website and claims portal, how we use it, and the choices you have."
       sections={[
         ['Information we collect', <>
           <p>When you look up a claim, you give us the claim code and ZIP code from your letter. If you continue with a claim, we collect:</p>
