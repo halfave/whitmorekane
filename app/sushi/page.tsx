@@ -22,7 +22,7 @@ export default async function Sushi() {
     .filter((c: any) => !/^TEST/.test(c.violation_number || ''))
     .map((c: any) => ({
       id: c.id, violation: c.violation_number, date: c.violation_date, respondent: c.respondent_name,
-      agency: c.issuing_agency || 'DOB', penalty: c.penalty_imposed, paid: c.amount_paid, owed: c.amount,
+      agency: c.issuing_agency || 'DOB', property: c.property_address, feePct: Number(c.fee_pct ?? 15), penalty: c.penalty_imposed, paid: c.amount_paid, owed: c.amount,
       code: c.claim_code, zip: c.respondent_zip, status: c.status, filedAt: c.filed_at, filedBy: c.filed_by,
       ppuDraft: hasInfo.has(c.id), ppuSigned: !!c.refund_request_signed_at,
       check: { issued: c.check_issued_on, number: c.check_number, amount: c.check_amount, received: c.check_received_on, forwarded: c.check_forwarded_on },

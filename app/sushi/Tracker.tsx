@@ -5,7 +5,7 @@ import Attach from './Attach';
 
 type F = { id: string; kind: string; name: string; url: string };
 type Row = {
-  id: string; violation: string; date: string | null; respondent: string; agency: string;
+  id: string; violation: string; date: string | null; respondent: string; agency: string; property: string | null; feePct: number;
   penalty: number | null; paid: number | null; owed: number | null; code: string | null; zip: string | null;
   status: string; filedAt: string | null; filedBy: string | null; ppuDraft: boolean; ppuSigned: boolean;
   check: { issued: string | null; number: string | null; amount: number | null; received: string | null; forwarded: string | null };
@@ -30,9 +30,10 @@ const link = (r: Row) => r.agency === 'DOB'
   ? `https://a810-bisweb.nyc.gov/bisweb/ECBQueryByNumberServlet?requestid=2&ecbin=${r.violation}`
   : 'https://a820-ecbticketfinder.nyc.gov/searchHome.action';
 
-type Key = 'violation' | 'date' | 'respondent' | 'agency' | 'owed' | 'status' | 'filedAt' | 'check';
+type Key = 'violation' | 'date' | 'respondent' | 'property' | 'agency' | 'owed' | 'fee' | 'status' | 'filedAt' | 'check';
+const fee = (r: Row) => (r.owed == null ? null : Math.round(Number(r.owed) * r.feePct) / 100);
 const val = (r: Row, k: Key): any =>
-  k === 'status' ? ORDER[r.status] : k === 'owed' ? Number(r.owed ?? -1) : k === 'check' ? Number(r.check.amount ?? -1) : (r as any)[k] ?? '';
+  k === 'status' ? ORDER[r.status] : k === 'owed' ? Number(r.owed ?? -1) : k === 'fee' ? Number(fee(r) ?? -1) : k === 'check' ? Number(r.check.amount ?? -1) : (r as any)[k] ?? '';
 
 export default function Tracker({ rows }: { rows: Row[] }) {
   const [stage, setStage] = useState<string>('all');
@@ -49,11 +50,12 @@ export default function Tracker({ rows }: { rows: Row[] }) {
     const s = q.trim().toLowerCase();
     return rows
       .filter((r) => stage === 'all' || r.status === stage)
-      .filter((r) => !s || [r.violation, r.respondent, r.code, r.agency].some((x) => (x || '').toLowerCase().includes(s)))
+      .filter((r) => !s || [r.violation, r.respondent, r.code, r.agency, r.property].some((x) => (x || '').toLowerCase().includes(s)))
       .sort((a, b) => { const x = val(a, sort.k), y = val(b, sort.k); return (x > y ? 1 : x < y ? -1 : 0) * sort.dir; });
   }, [rows, stage, q, sort]);
   const totalOwed = rows.reduce((s, r) => s + Number(r.owed || 0), 0);
   const totalIn = rows.reduce((s, r) => s + Number(r.check.amount || 0), 0);
+  const totalFee = rows.reduce((s, r) => s + Number(fee(r) || 0), 0);
 
   const Th = ({ k, children, right }: { k: Key; children: React.ReactNode; right?: boolean }) => (
     <th className={`px-3 py-2.5 ${right ? 'text-right' : 'text-left'}`}>
@@ -69,7 +71,7 @@ export default function Tracker({ rows }: { rows: Row[] }) {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[26px] font-medium text-[#13302a]">Refund tracker</h1>
-          <p className="text-sm text-[#6b7480]">{rows.length} violations · {usd(totalOwed)} owed · {usd(totalIn)} in checks received</p>
+          <p className="text-sm text-[#6b7480]">{rows.length} violations · {usd(totalOwed)} owed · {usd(totalFee)} fees · {usd(totalIn)} in checks received</p>
         </div>
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search violation, respondent, claim #"
           className="w-72 rounded-md border border-[#d9d2c4] bg-white px-3 py-2 text-sm" />
@@ -86,17 +88,17 @@ export default function Tracker({ rows }: { rows: Row[] }) {
       </div>
 
       <div className="mt-4 overflow-x-auto rounded-lg border border-[#e3ddd1] bg-white shadow-sm">
-        <table className="w-full min-w-[1000px] text-[14px]">
+        <table className="w-full min-w-[1250px] text-[14px]">
           <thead className="sticky top-0 bg-[#f7f3ec] text-[12px] font-semibold uppercase tracking-wide text-[#6b7480]">
             <tr>
-              <Th k="violation">Violation</Th><Th k="date">Issued</Th><Th k="respondent">Respondent</Th><Th k="agency">Agency</Th>
-              <Th k="owed" right>Owed</Th><th className="px-3 py-2.5 text-left">Claim #</th><Th k="status">Stage</Th>
+              <Th k="violation">Violation</Th><Th k="date">Issued</Th><Th k="respondent">Respondent</Th><Th k="property">Property</Th><Th k="agency">Agency</Th>
+              <Th k="owed" right>Owed</Th><Th k="fee" right>Fee</Th><th className="px-3 py-2.5 text-left">Claim #</th><Th k="status">Stage</Th>
               <th className="px-3 py-2.5 text-left">Docs</th><Th k="filedAt">Filed</Th><Th k="check" right>Check</Th>
             </tr>
           </thead>
           <tbody>
             {list.map((r) => <RowView key={r.id} r={r} open={open === r.id} toggle={() => setOpen(open === r.id ? null : r.id)} />)}
-            {!list.length && <tr><td colSpan={10} className="p-8 text-center text-[#6b7480]">Nothing here.</td></tr>}
+            {!list.length && <tr><td colSpan={12} className="p-8 text-center text-[#6b7480]">Nothing here.</td></tr>}
           </tbody>
         </table>
       </div>
@@ -125,8 +127,10 @@ function RowView({ r, open, toggle }: { r: Row; open: boolean; toggle: () => voi
         </td>
         <td className="whitespace-nowrap px-3 py-2.5 text-[#4a5550]">{dt(r.date)}</td>
         <td className="px-3 py-2.5"><button onClick={toggle} className="text-left hover:underline">{title(r.respondent)}</button></td>
+        <td className="max-w-[220px] px-3 py-2.5 text-[13px] text-[#4a5550]">{r.property || '—'}</td>
         <td className="px-3 py-2.5 text-[12px] text-[#6b7480]">{r.agency}</td>
         <td className="px-3 py-2.5 text-right font-semibold tabular-nums">{usd(r.owed)}</td>
+        <td className="px-3 py-2.5 text-right tabular-nums text-[#a8703f]" title={`${r.feePct}%`}>{usd(fee(r))}</td>
         <td className="px-3 py-2.5 font-mono text-[12px]">{r.code || '—'}</td>
         <td className="px-3 py-2.5">
           <div className="flex items-center gap-1.5">
@@ -166,7 +170,7 @@ function Details({ r }: { r: Row }) {
   );
   return (
     <tr className="bg-[#fbf9f5]">
-      <td colSpan={10} className="px-3 pb-4 pt-1">
+      <td colSpan={12} className="px-3 pb-4 pt-1">
         <div className="grid gap-5 rounded-md border border-[#e3ddd1] bg-white p-4 md:grid-cols-[2fr_1fr]">
           <div>
             <div className="text-[12px] font-semibold uppercase tracking-wide text-[#6b7480]">Filing & refund check</div>
