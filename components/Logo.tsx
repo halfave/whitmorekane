@@ -1,15 +1,11 @@
-// Interlocked italic W/K mark + serif wordmark (logo option 4).
+// Flourished script W (Monsieur La Doulaise) in copper + italic serif "hitmore Kane".
 export default function Logo({ dark = true }: { dark?: boolean }) {
   const ink = dark ? '#ffffff' : '#13302a';
+  const copper = dark ? '#c9935f' : '#a8703f';
   return (
-    <span className="flex items-center gap-2.5">
-      <svg width="46" height="40" viewBox="0 0 52 44" aria-hidden="true" className="shrink-0">
-        <text x="4" y="34" fill={ink} style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontWeight: 700, fontSize: 36 }}>W</text>
-        <text x="25" y="38" fill="#c9935f" style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontWeight: 700, fontSize: 36 }}>K</text>
-      </svg>
-      <span className="leading-none">
-        <span className="block font-[family-name:var(--font-serif)] text-[27px] font-semibold tracking-[0.01em]" style={{ color: ink }}>Whitmore Kane</span>
-      </span>
+    <span className="relative inline-flex my-[4px] h-[50px] items-end pl-[50px] leading-none" aria-label="Whitmore Kane">
+      <span aria-hidden="true" className="absolute left-0 top-[-6px] font-[family-name:var(--font-script)] text-[68px] leading-none" style={{ color: copper }}>W</span>
+      <span aria-hidden="true" className="mb-[4px] font-[family-name:var(--font-serif)] text-[27px] font-semibold italic tracking-[0.01em]" style={{ color: ink }}>hitmore Kane</span>
     </span>
   );
 }

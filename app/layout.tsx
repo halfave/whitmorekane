@@ -1,11 +1,12 @@
 import './globals.css';
 import Link from 'next/link';
-import { Work_Sans, Cormorant_Garamond } from 'next/font/google';
+import { Work_Sans, Cormorant_Garamond, Monsieur_La_Doulaise } from 'next/font/google';
 import Logo from '@/components/Logo';
 import PrivacyBanner, { PrivacyPreferencesLink } from '@/components/PrivacyBanner';
 import { FIRM } from '@/lib/agreement';
 
 const work = Work_Sans({ subsets: ['latin'], variable: '--font-display', weight: ['400', '500', '600', '700'] });
+const script = Monsieur_La_Doulaise({ subsets: ['latin'], variable: '--font-script', weight: '400' });
 const serif = Cormorant_Garamond({ subsets: ['latin'], variable: '--font-serif', weight: ['600', '700'], style: ['normal', 'italic'] });
 
 export const metadata = {
@@ -23,7 +24,7 @@ const NAV: [string, string][] = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${work.variable} ${serif.variable}`}>
+    <html lang="en" className={`${work.variable} ${serif.variable} ${script.variable}`}>
       <body className="min-h-screen bg-white font-[family-name:var(--font-display)] text-[14px] leading-[1.45] text-[#333] antialiased">
         <header className="sticky top-0 z-30 bg-gradient-to-r from-[#0c1f1b] to-[#14332c] text-white">
           <div className="mx-auto flex h-[74px] max-w-[1170px] items-center justify-between gap-4 px-[15px]">
