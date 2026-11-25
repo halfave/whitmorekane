@@ -3,7 +3,6 @@ import { use, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { agreementText, FIRM } from '@/lib/agreement';
 import SignaturePad from '@/components/SignaturePad';
-import FindPayment from '@/components/FindPayment';
 import PaymentExamples from '@/components/PaymentExamples';
 import AddressLookup from '@/components/AddressLookup';
 
@@ -168,7 +167,6 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
     payUnknown: false,
   });
   const [files, setFiles] = useState<Record<string, string>>(Object.fromEntries(view.docs.map((k) => [k, 'Uploaded'])));
-  const [showHelp, setShowHelp] = useState(false);
   const [err, setErr] = useState(''); const [busy, setBusy] = useState(false);
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value });
 
@@ -209,7 +207,7 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
           confirm payment before it reaches you. We will never cash your check.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <label className={`${label} sm:col-span-2`}>Owner / company name<input required className={input} value={f.entityName} onChange={set('entityName')} /></label>
+          <label className={`${label} sm:col-span-2`}>Owner / Company Name<input required className={input} value={f.entityName} onChange={set('entityName')} /></label>
           <label className={label}>Who made the original payment?
             <select className={input} value={f.paidBy} onChange={set('paidBy')}>
               <option value="yes">The owner above</option><option value="no">Someone else (agent, contractor…)</option><option value="unsure">Not sure</option>
@@ -224,12 +222,22 @@ function DetailsStep({ view, code, zip, onDone }: { view: View; code: string; zi
           <div className={f.payUnknown ? 'pointer-events-none opacity-50' : ''}>
             <ol className="mt-5 grid gap-6">
               <li>
-                <div className="text-[14px] font-semibold text-[#13302a]"><span className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-[#13302a] text-[12px] text-white">1</span>Find one of these</div>
-                <PaymentExamples />
-                <button type="button" onClick={() => setShowHelp(!showHelp)} className="mt-3 text-[14px] font-medium text-[#a8703f] underline">
-                  {showHelp ? 'Hide tips' : 'Not sure where to look? See tips'}
-                </button>
-                {showHelp && <div className="mt-3 bg-[#fbf9f5] p-5"><FindPayment compact /></div>}
+                <div className="text-[14px] font-semibold text-[#13302a]"><span className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-[#13302a] text-[12px] text-white">1</span>
+                  Find proof that you paid {view.details?.paid != null ? <span className="text-[#a8703f]">{usd(view.details.paid)}</span> : 'the original amount'}
+                </div>
+                <p className="mt-1 text-[13px] text-[#4a5550]">Any one of these works:</p>
+                <PaymentExamples violation={view.details?.summons?.[0]} respondent={view.respondent} paid={view.details?.paid} />
+                <details className="group mt-4 border border-[#ddd5c7] bg-[#fbf9f5]">
+                  <summary className="cursor-pointer list-none px-4 py-3 text-[14px] font-medium text-[#13302a]">
+                    <span className="mr-2 inline-block transition group-open:rotate-90">›</span>Where to look
+                  </summary>
+                  <ul className="grid gap-2.5 px-4 pb-4 text-[14px] text-[#4a5550]">
+                    <li><b className="text-[#13302a]">Search your email</b> for “{view.details?.summons?.[0] || 'your violation number'}”, “CityPay” or “CPY”.</li>
+                    <li><b className="text-[#13302a]">Search your billing inbox too</b>, or whoever pays bills for you (bookkeeper, property manager).</li>
+                    <li><b className="text-[#13302a]">Let AI search your statements.</b> Drop your bank or card statements into an AI assistant and ask: “Find a payment to NYC, CityPay or ECB{view.details?.paid != null ? ` for ${usd(view.details.paid)}` : ''}.”</li>
+                    <li><b className="text-[#13302a]">Check your own records</b>: accounting software, check register or payment logs.</li>
+                  </ul>
+                </details>
               </li>
               <li>
                 <div className="text-[14px] font-semibold text-[#13302a]"><span className="mr-2 inline-grid h-6 w-6 place-items-center rounded-full bg-[#13302a] text-[12px] text-white">2</span>Check that it shows</div>
